@@ -1,0 +1,112 @@
+.LoginFormOutest{
+  display: flex;
+  padding: 15px;
+  background-color: #E8F3EF;
+  width:632px;
+  height: 824px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.CompanyTab{
+  font-family: Mulish;
+  font-style: normal;
+  width:50%;
+  background: #f8e769;
+  opacity: 0.6;
+  margin: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  font-size: 24px;
+  border-radius: 20px;
+}
+
+.CandidateTab{
+  background-color: #21825e;
+  opacity: 0.5;
+  border-radius: 20px;
+  font-family: Mulish;
+  font-style: normal;
+  width:50%;
+  margin: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 24px;
+}
+
+
+.inputField{
+  width:70%;
+  background: #21825e;
+  background-color:rgba(33, 130, 94, 0.31);
+  margin: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2rem;
+  border-radius: 20px;
+  padding:25px;
+  padding-top: 5px;
+  height:50%;
+}
+
+.break{
+    width:20%;
+    margin: 0px;
+    display: flex;
+    color: white;
+    font-size: 2rem;
+    height: 10%
+
+}
+
+.firstRow{
+  width: 100%;
+  margin: 0px;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  font-size: 2rem;
+  height: 10%
+}
+
+.LoginTab{
+  font-family: Mulish;
+  font-style: normal;
+  width:50%;
+  background: black;
+  opacity: 0.6;
+  margin: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 24px;
+  border-radius: 20px;
+}
+
+.SignUpTab{
+  font-family: Mulish;
+  font-style: normal;
+  width:50%;
+  background: grey;
+  opacity: 0.6;
+  margin: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 24px;
+  border-radius: 20px;
+}
+
+
+::placeholder {
+  padding:12px;
+}
