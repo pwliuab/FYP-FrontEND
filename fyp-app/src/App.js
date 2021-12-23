@@ -26,12 +26,8 @@ function Welcome(props) {
 function App() {
 
   return (
-    <div className="App">
+    <div style={{backgroundColor:'#E8F3EF'}}>
       {renderRoutes(routes)}
-      <header className="App-header">
-        <Welcome name="Paul"/>
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
     </div>
 
   );
