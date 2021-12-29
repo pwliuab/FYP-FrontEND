@@ -3,8 +3,8 @@
   display: flex;
   padding: 15px;
   background-color: #E8F3EF;
-  width: 800px;
-  height: 824px;
+  width: 700px;
+  height: 724px;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -64,7 +64,6 @@
     color: white;
     font-size: 2rem;
     height: 10%
-
 }
 
 .firstRow{
@@ -90,6 +89,7 @@
   color: white;
   font-size: 24px;
   border-radius: 20px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
 .SignUpTab{
@@ -105,8 +105,32 @@
   color: white;
   font-size: 24px;
   border-radius: 20px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
+.SignUpTab:hover {
+  background-color: #21825e;
+  color: white;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.LoginTab:hover {
+  background-color: #f8e769;
+  color: black;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.SignUpTab:active {
+  transform: translateY(4px);
+}
+
+.LoginTab:active {
+  transform: translateY(4px);
+}
+
+.InActiveTab:hover {
+  background-color: green;
+}
 
 ::placeholder {
   padding:12px;

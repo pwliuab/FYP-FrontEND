@@ -1,6 +1,7 @@
 import Navbar from './component/testing';
 import Login from './component/Login';
-import LoginPage from './component/LoginPage'
+import LoginPage from './component/LoginPage';
+import SeekerCenterPage from './component/SeekerCenterPage';
 const rootPath = process.env.PUBLIC_URL;
 const routes = [
 
@@ -21,6 +22,12 @@ const routes = [
     component: LoginPage,
     exact: true,
     breadcrumbName: 'LoginPage'
+  },
+  {
+    path:`${rootPath}/SeekerCenterPage`,
+    component: SeekerCenterPage,
+    exact: true,
+    breadcrumbName: 'SeekerCenterPage'
   },
 ];
 
