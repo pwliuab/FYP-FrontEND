@@ -2,6 +2,7 @@ import Navbar from './component/testing';
 import Login from './component/Login';
 import LoginPage from './component/LoginPage';
 import SeekerCenterPage from './component/SeekerCenterPage';
+import CommunityPage from './component/CommunityPage';
 const rootPath = process.env.PUBLIC_URL;
 const routes = [
 
@@ -28,6 +29,12 @@ const routes = [
     component: SeekerCenterPage,
     exact: true,
     breadcrumbName: 'SeekerCenterPage'
+  },
+  {
+    path:`${rootPath}/CommunityPage`,
+    component: CommunityPage,
+    exact: true,
+    breadcrumbName: 'CommunityPage'
   },
 ];
 
