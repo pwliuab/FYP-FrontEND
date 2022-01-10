@@ -3,6 +3,8 @@ import Login from './component/Login';
 import LoginPage from './component/LoginPage';
 import SeekerCenterPage from './component/SeekerCenterPage';
 import CommunityPage from './component/CommunityPage';
+import JobAnalyResultPage from './component/JobAnalyResultPage';
+import MatchAnalyPage from './component/MatchAnalyPage';
 const rootPath = process.env.PUBLIC_URL;
 const routes = [
 
@@ -36,6 +38,18 @@ const routes = [
     exact: true,
     breadcrumbName: 'CommunityPage'
   },
+  {
+    path:`${rootPath}/JobAnalyResultPage`,
+    component: JobAnalyResultPage,
+    exact: true,
+    breadcrumbName: 'JobAnalyResultPage'
+  },
+  {
+    path:`${rootPath}/MatchAnalyPage`,
+    component: MatchAnalyPage,
+    exact: true,
+    breadcrumbName: 'MatchAnalyPage'
+  }
 ];
 
 export default routes;

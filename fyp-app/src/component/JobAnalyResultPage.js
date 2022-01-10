@@ -1,11 +1,23 @@
 import Navbar from './Navbar';
 import React, { useState, useEffect } from 'react';
 import UserIconSVG from '../assets/Shape.svg';
-import './styles/CommunityPage.css';
+import './styles/JobAnalyResultPage.css';
 import LeftIconSVG from '../assets/Left.svg';
 import RightIconSVG from '../assets/Right.svg';
+
+const renderHistoGram = () => {
+  let xCoordinate = 10;
+  let transformStr = [1,2,3,4,5,6,7,8,9,10];
+  let indents = transformStr.map((item) => {
+    let transf = 'translate(' + xCoordinate.toString() + ',200)rotate(270)';
+    let yCoordinate = item * 10;
+    xCoordinate += 70;
+    return(<rect width={yCoordinate} height={45} style={{fill:'rgba(176, 190, 197, 0.32)'}} transform={transf}/>)
+  })
+  return indents;
+}
+
 function renderList() {
-  console.log('indents');
   // use array slice to divide pages
   // or backend dividing pages
   // it depends on how we handle stuff
@@ -106,96 +118,90 @@ function renderTable() {
         )
       }
     }
-
     return (
       <div style={styles}>
         {childIndents}
       </div>
     )
   })
-
   return indents;
 }
 
-export  function CommunityPage() {
+export  function JobAnalyResultPage() {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
     document.body.style.overflowX = 'hidden';
   });
-  ////////////////////////////////////////////////////////////
-  // flex is used to divide the page into 4 part
-  // every part of the container has its own inner division,
-  // e.g. the CV matching text description and the buttons are two parts that divides secondContainer
-  // top container is  for the top navigation bar part
-  // SecondContainer is for  the get your CV score button's row
-  // Third container is for the SavedJobsTab and SavedJobsContent
-  // BottomContainer is for the ApplicationStatusTab and ApplicationStatusContent
-  ///////////////////////////////////////////////////////////
   return(
     <div style={{ display:'flex', flexDirection:'column' }}>
       <div class="TopContainer">
         <Navbar/>
       </div>
-      <div class="SecondContainer" style={{display: 'flex',flexBasis: 850, flexDirection:'row'}}>
-        <div class="list" style={{flex: 1, display:'flex'}}>
-          <div class="list" style={{margin:20, flex:1, display:'flex', flexDirection:'column'}}>
-            <div class="list" style={{flex: 1.5}}>
-              <span style={{position:'relative', top:25, margin:10, color:'grey', fontSize:14}}>Job List</span>
-            </div>
-            {renderList()}
-
-          </div>
-        </div>
-        <div style={{flex:3, display:'flex', flexDirection:'column'}}>
-        <div class="list" style={{display:'flex', flex:1, flexDirection: 'column'}}>
-          <div class="jbTitle" style={{flex:1}}>
-            JoB Tile (DATA ANALYST)
-          </div>
-          <div class="jbDesript" style={{display:'flex', flexDirection:'column', flex:2,}}>
-            <div style={{flex:1}}>
-              <span style={{position:'relative', top:10}}>125 people applied, 500 people saved, 1000 people read</span><br/>
-
-            </div>
-            <div style={{display:'flex', flexDirection:'row',flex:1.8}}>
-              <div style={{display:'flex', flexDirection:'column', flex:1.7}}>
-                <div style={{flex:1}}>5 people got the score higher than 90</div>
-                <div style={{flex:1}}>Mean: 76 | SD: 7 | Highest: 95 | Lowest: 20</div>
+      <div class="SecondContainer" style={{display: 'flex',flexBasis: 870, flexDirection:'column'}}>
+        <div style={{flex:1, flexDirection:'row', display:'flex'}}>
+          <div style={{flex:1.6, display:'flex', flexDirection:'column'}}>
+            <div style={{flex:1, display:'flex', flexDirection:'row'}}>
+              <div style={{flex:2}}>
+                <span class="JobTitle">JOB TITLE (DATA ANALYST)</span>
               </div>
-              <div style={{display:'flex',flex:2}}>
-                <div class="saveBtn" style={{margin:20, position:'relative', top:10}}>
-                  Save
+              <div style={{flex:1, display:'flex', flexDirection:'row'}}>
+                <div style={{flex:1, display:'flex'}}>
+                  <div class="CustomizeBtn" style={{flex:1, height:'70%',margin:20, position:'relative', top:20}}>
+                    Customize
+                  </div>
+                </div>
+                <div style={{flex:1, display:'flex'}}>
+                  <div class="SaveBtn" style={{flex:1, height:'70%',margin:20, position:'relative', top:20}}>
+                    Save
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="JobDescription" style={{flex:1.7, paddingLeft:20}}>
+              <p>125 People have applied for this job</p>
+              <p>5 People got the score higher than  90</p>
+              <p>Mean: 76 | SD: 7 | Highest: 95 | Lowest: 20</p>
+            </div>
           </div>
+          <div style={{display:'flex', flex:1}}>
+            <div class="candidateEva" style={{display:'flex',flex:1, margin:20, backgroundColor:'white', borderRadius:20}}>
+              <svg style={{flex:1}}>
+                <text style={{fill:'black', fontWeight:'bold', fontSize: 25}} transform="translate(20,30)">Score Histogram</text>
+                <text style={{fill:'grey'}} transform="translate(20,50)">Statistics subinformation</text>
+                {renderHistoGram()}
+              </svg>
+            </div>
+          </div>
+
         </div>
-        <div class="candidateEva" style={{display:'flex', flexDirection:'column', flex:2, margin:12, position:'relative', top:-3}}>
+        <div class="candidateEva" style={{flex:4, display:'flex', flexDirection:'column', margin:12}}>
           <div class="tableTitle" style={{height: 20, width: 500}}>
-            <span style={{position:'relative', margin: 20, top: 20}}>Candidate Evaluation</span>
+            <span style={{position:'relative', margin: 20, top: 20, left: 10}}>Candidate Evaluation</span>
           </div>
           <div style={{display:'flex', margin:20, flex:1, backgroundColor:'white', flexDirection:'column',
                 borderRadius:8, marginTop: 40, marginBottom: 40}}>
             {renderTable()}
           </div>
-          <div style={{height: 10}}>
-
-            <span style={{position:'relative', top: -30, left: 20, color: 'grey'}}>
-              Rows per page:
-              <img src={LeftIconSVG} style={{position:'relative', top:13, height:30, width:30, transform:'rotate(270deg)scale(0.85)'}} alt="LeftIconSVG" />
-            </span>
-            <span style={{position:'relative', top: -30, left: 1100, color: 'grey'}}>
-              Rows per page:
-              <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30,}} alt="LeftIconSVG" />
-              <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
-            </span>
-
+          <div style={{height: 30, display:'flex', flexDirection:'row'}}>
+            <div style={{flex:8}}>
+              <span style={{position:'relative', top: -30, left: 20, color: 'grey'}}>
+                Rows per page:
+                <img src={LeftIconSVG} style={{position:'relative', top:13, height:30, width:30, transform:'rotate(270deg)scale(0.85)'}} alt="LeftIconSVG" />
+              </span>
+            </div>
+            <div style={{flex:1}}>
+              <span style={{position:'relative', top: -30, color: 'grey'}}>
+                Rows per page:
+                <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30,}} alt="LeftIconSVG" />
+                <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
+              </span>
+            </div>
           </div>
         </div>
-        </div>
       </div>
-    </div>
+  </div>
   )
 }
 
-export default CommunityPage;
+export default JobAnalyResultPage;

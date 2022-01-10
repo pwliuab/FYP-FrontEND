@@ -1,23 +1,10 @@
-.TopContainer {
-  flex: 1;
-}
+.JobTitle {
+  position: relative;
+  width: 557px;
+  height: 37px;
+  left: 28px;
+  top: 55px;
 
-.SecondContainer {
-  flex: 9;
-}
-
-.ListItem {
-
-}
-
-.ListItem:hover{
-
-  color: green!important;
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1!important;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)!important;
-}
-
-.jbTitle {
   font-family: IBM Plex Mono;
   font-style: italic;
   font-weight: bold;
@@ -26,26 +13,24 @@
   display: flex;
   align-items: center;
   text-align: center;
-  color: #000000;
+
 }
 
-.jbDesript {
+.JobDescription {
   font-family: Open Sans;
   font-style: normal;
   font-weight: bold;
   font-size: 36px;
   line-height: 16px;
   /* or 44% */
-
-  display: flex;
   color: #000000;
 }
 
-.saveBtn {
+.CustomizeBtn {
   font-family: Mulish;
   font-style: normal;
   width:50%;
-  background: rgba(248, 231, 105, 0.6);
+  background: rgba(33, 130, 94, 0.5);
   margin: 0px;
   display: flex;
   justify-content: center;
@@ -54,16 +39,21 @@
   font-weight: bold;
   font-size: 24px;
   border-radius: 20px;
-  width: 120px;
-  height: 50px;
 }
 
-.candidateEva {
-  background: #CCE9E0;
-/* Elevation - 1 */
-
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.24);
-  border-radius: 8px;
+.SaveBtn {
+    font-family: Mulish;
+    font-style: normal;
+    width:50%;
+    background: rgba(248, 231, 105, 0.5);
+    margin: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    font-weight: bold;
+    font-size: 24px;
+    border-radius: 20px;
 }
 
 .tableTitle {
@@ -73,4 +63,12 @@
   font-size: 20px;
   line-height: 28px;
   color: #000000;
+}
+
+.candidateEva {
+  background: white;
+/* Elevation - 1 */
+
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.24);
+  border-radius: 8px;
 }
