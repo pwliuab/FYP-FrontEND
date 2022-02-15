@@ -7,8 +7,6 @@ function Login(props){
   const [companyClassName, setCompanyClassName] = useState('InActiveTab');
 
   useEffect(() => {
-    // handlechange is a function passed by parent, the page who calls it. (check whether tab is clicked to switch mode)
-    // candidateClassName, setCompanyClassName are the css changes when mode is switch
     if(activeCandidateBtn){
         setCandidateClassName('ActiveTab');
         setCompanyClassName('InActiveTab');
@@ -21,7 +19,7 @@ function Login(props){
       props.handleChange(false);
     }
   });
-  //
+  
   return(
     <div style={{width:'800px', height:'800px', backgroundColor:'#E8F3EF', position:'relative', left:20}}>
       <div class="LoginFormOutest" style={{height:'8%'}}>
