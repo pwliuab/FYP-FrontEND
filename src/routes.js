@@ -6,6 +6,7 @@ import InputPage from './components/inputPage';
 import CompanyPage from './components/companyPage';
 import SeekerCenterPage from './components/SeekerCenterPage';
 import CommunityPage from './components/CommunityPage';
+import Form from './components/form';
 const rootPath = process.env.PUBLIC_URL;
 const routes = [
 
@@ -20,6 +21,12 @@ const routes = [
     component: Login,
     exact: true,
     breadcrumbName: 'LoginPage'
+  },
+  {
+    path:`${rootPath}/form`,
+    component: Form,
+    exact: true,
+    breadcrumbName: 'Form'
   },
   {
     path:`${rootPath}/loginPage`,
