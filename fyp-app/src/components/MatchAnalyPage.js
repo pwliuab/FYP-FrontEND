@@ -48,11 +48,11 @@ const getStudentResult = (resultList) => {
   // 團隊
   // 技能
   let outerCoordinateList = [
-    {x: 120, y:26},
-    {x: 220, y:96},
-    {x: 184, y:220},
-    {x: 60, y:220},
-    {x: 26, y:96},
+    { x: 120, y: 26 },
+    { x: 220, y: 96 },
+    { x: 184, y: 220 },
+    { x: 60, y: 220 },
+    { x: 26, y: 96 },
   ]
 
   for (let i = 0; i < outerCoordinateList.length; i++) {
@@ -64,7 +64,8 @@ const getStudentResult = (resultList) => {
     }
   }
   console.log(coordinates);
-  return (    < polygon
+  return (
+              < polygon
                 points={coordinates}
                 fill="purple"
                 stroke="#ffffbe"
@@ -84,11 +85,11 @@ const getPentagon = (portion, color='#ffffbe') => {
   // 團隊
   // 技能
   let outerCoordinateList = [
-    {x: 120, y:26},
-    {x: 220, y:96},
-    {x: 184, y:220},
-    {x: 60, y:220},
-    {x: 26, y:96},
+    { x: 120, y: 26 },
+    { x: 220, y: 96 },
+    { x: 184, y: 220 },
+    { x: 60, y: 220 },
+    { x: 26, y: 96 },
   ]
 
   for (let i = 0; i < outerCoordinateList.length; i++) {

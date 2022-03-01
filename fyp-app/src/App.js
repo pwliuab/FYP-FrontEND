@@ -1,6 +1,5 @@
 import logo from './logo.svg';
 import './App.css';
-import Navbar from './component/Navbar';
 import React, { useState } from 'react';
 import { renderRoutes } from 'react-router-config';
 import routes from './routes';

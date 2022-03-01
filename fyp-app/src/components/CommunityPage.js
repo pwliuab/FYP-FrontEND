@@ -28,7 +28,7 @@ function renderList() {
   });
 // static
   let styless = {
-display:'flex', flexDirection:'row',
+    display:'flex', flexDirection:'row',
     flex:1.5,
     paddingLeft: 10,
     paddingTop: 10,
@@ -144,7 +144,6 @@ export  function CommunityPage() {
               <span style={{position:'relative', top:25, margin:10, color:'grey', fontSize:14}}>Job List</span>
             </div>
             {renderList()}
-
           </div>
         </div>
         <div style={{flex:3, display:'flex', flexDirection:'column'}}>

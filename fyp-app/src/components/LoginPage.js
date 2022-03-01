@@ -17,7 +17,7 @@ export  function LoginPage(){
   return(
     <div style={{display: 'flex', flexDirection:'column'}}>
       <div style={{flex:1,top:0 ,width:'100%'}}>
-        <Navbar/>
+        <Navbar type="jobSeeker"/>
       </div>
       <div style={{flex:1,display:'flex', flexDirection:'row', justifyContent:'flex-end'}}>
         <div style={{position:'relative',left:-140, top: 85}}>

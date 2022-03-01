@@ -1,18 +1,28 @@
-import Navbar from './component/testing';
-import Login from './component/Login';
-import LoginPage from './component/LoginPage';
-import SeekerCenterPage from './component/SeekerCenterPage';
-import CommunityPage from './component/CommunityPage';
-import JobAnalyResultPage from './component/JobAnalyResultPage';
-import MatchAnalyPage from './component/MatchAnalyPage';
+import Navbar from './components/testing';
+import Login from './components/Login';
+import LoginPage from './components/LoginPage';
+import SeekerCenterPage from './components/SeekerCenterPage';
+import CommunityPage from './components/CommunityPage';
+import JobAnalyResultPage from './components/JobAnalyResultPage';
+import MatchAnalyPage from './components/MatchAnalyPage';
+import StartPage from './components/StartPage';
+import SeekerFilterPage from './components/SeekerFilterPage';
+import SeekerCommunityPage from './components/SeekerCommunityPage';
+import InputPage from './components/inputPage';
+
 const rootPath = process.env.PUBLIC_URL;
 const routes = [
-
   {
     path:`${rootPath}/hi`,
     component: Navbar,
     exact: true,
     breadcrumbName: 'Navbar'
+  },
+  {
+    path:`${rootPath}/`,
+    component: LoginPage,
+    exact: true,
+    breadcrumbName: 'LoginPage'
   },
   {
     path:`${rootPath}/login`,
@@ -49,7 +59,37 @@ const routes = [
     component: MatchAnalyPage,
     exact: true,
     breadcrumbName: 'MatchAnalyPage'
-  }
+  },
+  {
+    path:`${rootPath}/startPage`,
+    component: StartPage,
+    exact: true,
+    breadcrumbName: 'StartPage'
+  },
+  {
+    path:`${rootPath}/SeekerFilterPage`,
+    component: SeekerFilterPage,
+    exact: true,
+    breadcrumbName: 'SeekerFilterPage'
+  },
+  {
+    path:`${rootPath}/SeekerCommunityPage`,
+    component: SeekerCommunityPage,
+    exact: true,
+    breadcrumbName: 'SeekerCommunityPage'
+  },
+  {
+    path:`${rootPath}/inputPage`,
+    component: InputPage,
+    exact: true,
+    breadcrumbName: 'InputPage'
+  },
+  {
+  path:`${rootPath}/communityPage`,
+  component: CommunityPage,
+  exact: true,
+  breadcrumbName: 'CommunityPage'
+},
 ];
 
 export default routes;
