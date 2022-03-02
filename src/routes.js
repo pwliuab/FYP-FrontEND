@@ -6,7 +6,9 @@ import InputPage from './components/inputPage';
 import CompanyPage from './components/companyPage';
 import SeekerCenterPage from './components/SeekerCenterPage';
 import CommunityPage from './components/CommunityPage';
-import Form from './components/form';
+import LoginForm from './components/loginForm';
+import RegisterForm from './components/registerForm';
+import Upload from './components/uploadPage';
 const rootPath = process.env.PUBLIC_URL;
 const routes = [
 
@@ -23,10 +25,22 @@ const routes = [
     breadcrumbName: 'LoginPage'
   },
   {
-    path:`${rootPath}/form`,
-    component: Form,
+    path:`${rootPath}/loginForm`,
+    component: LoginForm,
     exact: true,
-    breadcrumbName: 'Form'
+    breadcrumbName: 'LoginForm'
+  },
+  {
+    path:`${rootPath}/registerForm`,
+    component: RegisterForm,
+    exact: true,
+    breadcrumbName: 'RegisterForm'
+  },
+  {
+    path:`${rootPath}/uploadPage`,
+    component: Upload,
+    exact: true,
+    breadcrumbName: 'UploadPage'
   },
   {
     path:`${rootPath}/loginPage`,

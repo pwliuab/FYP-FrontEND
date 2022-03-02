@@ -3,6 +3,8 @@ import Login from './Login';
 import React, { useState, useEffect } from 'react';
 import CircleGreenSVG from '../assets/circle.svg';
 import CircleYellowSVG from '../assets/yellowCircle.svg';
+
+
 export  function LoginPage(){
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   useEffect(() => {

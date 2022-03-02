@@ -9,7 +9,7 @@ function Navbar(){
       <li><a className="active" href="#home">ResumeMatching</a></li>
       <li><a href="#news"><div>Match</div></a></li>
       <li><a href="#contact">Community</a></li>
-      <li style={{float:'right', fontSize:'20px'}}><a href="#about">
+      <li style={{float:'right', fontSize:'20px'}}><a href="#LoginForm">
       <b>User</b>
       <img src={userimage} alt="userIcon" width="40" height="38" style={{padding:'0', border:'none', borderInline:'none', textDecoration:'none'}}/>
       </a>
