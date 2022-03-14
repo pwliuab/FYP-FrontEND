@@ -1,0 +1,69 @@
+.filterPage {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 860px;
+  background-color: #E8F3EF;
+}
+
+.filterPageJobBoard {
+  flex-direction: row;
+}
+
+.filterPageSearchContent {
+  height: 40%;
+  min-width: 300px;
+
+}
+
+@media only screen and (max-width: 1100px) {
+  .filterPageSearchContent {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    height: auto;
+  }
+
+  .filterPageJobBoard {
+    flex-direction: column;
+  }
+}
+
+.filterDropDown {
+  border-radius: 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 400px;
+  background-color: white;
+  transform: translateY(-10px);
+  transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+}
+
+.filterDropDown.active {
+
+}
+
+.filterDropDown .listContent {
+  font-family: Mulish;
+}
+
+.filterDropDown::-webkit-scrollbar {
+  width: 20px;
+
+}
+
+
+.filterDropDown::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 20px;
+}
+
+.filterDropDown::-webkit-scrollbar-thumb {
+  background: grey;
+  border-radius: 20px;
+  border-right: none;
+  border-left: none;
+}
+
+
+.filterDropDown::-webkit-scrollbar-thumb:hover {
+  background: #707B7C;
+}
