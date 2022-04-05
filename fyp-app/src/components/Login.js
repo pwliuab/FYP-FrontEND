@@ -11,7 +11,7 @@ function Login(props){
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
-
+  const rootPath = process.env.PUBLIC_URL;
   // Handling the email change
   const handleEmail = (e) => {
   	setEmail(e.target.value);
@@ -124,7 +124,9 @@ function Login(props){
       </div>
       <div class="LoginFormOutest"style={{ paddingTop:'0px',height:'14.555%',left:100 }} >
         <div class="break" style={{ width:'20%' }}></div>
-        <div class="SignUpTab" style={{ height:'50%',width:'60%' }}>SIGN UP</div>
+        <a href={`${rootPath}/RegistrationPage`} class="SignUpTab" style={{ height:'50%',width:'60%' }}>
+          <div>SIGN UP</div>
+        </a>
         <div class="break" style={{ width:'20%' }}></div>
       </div>
       <div style={{ position:'relative',fontSize:20, left: 380,

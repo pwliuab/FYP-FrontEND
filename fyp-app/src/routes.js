@@ -10,7 +10,7 @@ import SeekerFilterPage from './components/SeekerFilterPage';
 import SeekerCommunityPage from './components/SeekerCommunityPage';
 import InputPage from './components/inputPage';
 import CompanyPage from './components/companyPage'
-
+import RegistrationForm from './components/RegistrationForm'
 const rootPath = process.env.PUBLIC_URL;
 const routes = [
   {
@@ -26,17 +26,19 @@ const routes = [
     breadcrumbName: 'LoginPage'
   },
   {
-    path:`${rootPath}/login`,
-    component: Login,
-    exact: true,
-    breadcrumbName: 'LoginPage'
-  },
-  {
     path:`${rootPath}/loginPage`,
     component: LoginPage,
     exact: true,
     breadcrumbName: 'LoginPage'
   },
+
+  {
+    path:`${rootPath}/RegistrationPage/:id`,
+    component: RegistrationForm,
+    exact: true,
+    breadcrumbName: 'RegistrationPage'
+  },
+
   {
     path:`${rootPath}/SeekerCenterPage`,
     component: SeekerCenterPage,
