@@ -67,6 +67,28 @@ let handleTextMode = (e) => {
   setFilesValue([...tempFiles]);
 }
 
+let handleSubmit = async (e) => {
+    let data = new FormData();
+    for (let i = 0; i < selectedFiles.length; i ++) {
+      if (selectedFiles[i].id == type.File.JD) data.append("JD", selectedFiles[i].file);
+      else if (selectedFiles[i].id == type.File.RESUME) data.append("CV", selectedFiles[i].file);
+    }
+    console.log(textContent);
+    for (let i = 0; i < textContent.length; i ++) {
+      if (textContent[i].id == type.Value.JD) data.append("JDText", textContent[i].content);
+      else if (textContent[i].id == type.Value.RESUME) data.append("CVText", textContent[i].content);
+    }
+
+    let res = await fetch("http://143.89.130.207:3000/web_api/matching/", {
+      method: 'POST',
+      body: data,
+    })
+
+    let resData = await res.json();
+    alert(resData.body);
+    console.log(resData);
+}
+
   let renderTextArea = (placeHolder, type) => {
 
     return (
@@ -182,7 +204,7 @@ let handleTextMode = (e) => {
                 width:'25%', margin: 10, padding:22}}>Search From List</div>
               </div>
               <div style={{flex:1, display: 'flex', justifyContent:'start', marginLeft: 10}}>
-              <div class='y_button' style={{ height:'6%',
+              <div class='y_button' onClick={handleSubmit} style={{ height:'6%',
                           width:'25%', margin: 10, padding:22}}>Get Result</div>
               </div>
             </div>

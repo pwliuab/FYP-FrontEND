@@ -9,6 +9,7 @@ import StartPage from './components/StartPage';
 import SeekerFilterPage from './components/SeekerFilterPage';
 import SeekerCommunityPage from './components/SeekerCommunityPage';
 import InputPage from './components/inputPage';
+import CompanyPage from './components/companyPage'
 
 const rootPath = process.env.PUBLIC_URL;
 const routes = [
@@ -89,6 +90,12 @@ const routes = [
   component: CommunityPage,
   exact: true,
   breadcrumbName: 'CommunityPage'
+},
+{
+path:`${rootPath}/CompanyPage`,
+component: CompanyPage,
+exact: true,
+breadcrumbName: 'CommunityPage'
 },
 ];
 
