@@ -5,6 +5,11 @@ import UserIconSVG from '../assets/Shape.svg';
 import LeftIconSVG from '../assets/Left.svg';
 import SearchIconSVG from '../assets/Search.svg';
 import CirclesIconSVG from '../assets/CombineCircle.svg'
+import { Authentication } from './Authentication';
+import { useHistory } from "react-router-dom";
+import { RedirectTo } from './Redirection';
+import { JBSeekerType, USER_ID_COOKIE, USER_EMAIL_COOKIE } from './ConstantVariable';
+
 
 function renderList() {
   console.log('indents');
@@ -123,15 +128,26 @@ function renderTable() {
 
 export  function SeekerCommunityPage() {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
+
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
     document.body.style.overflowX = 'hidden';
   });
 
+  let history = useHistory();
+  useEffect(() => {
+
+    const CheckLogin = () => {
+      if (Authentication()) history.push(RedirectTo(null, null));
+    }
+    CheckLogin();
+
+  }, []);
+
   return(
     <div style={{ display: 'flex', flexDirection:'column' }}>
       <div class="TopContainer" style={{ backgroundColor:'black'}}>
-        <Navbar/>
+        <Navbar type={JBSeekerType}/>
       </div>
       <div style={{display:'flex', flexDirection:'row', flex:1, flexBasis:880}}>
         <div style={{display:'flex', flexDirection:'column', flex:1}}>

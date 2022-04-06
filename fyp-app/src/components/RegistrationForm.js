@@ -3,21 +3,23 @@ import Navbar from './Navbar';
 import CircleGreenSVG from '../assets/circle.svg';
 import CircleYellowSVG from '../assets/yellowCircle.svg';
 import 'semantic-ui-css/semantic.min.css';
-
+import { RedirectTo } from  './Redirection';
 import { Form, Button } from 'semantic-ui-react';
 import { useForm } from "react-hook-form";
-import './styles/loginForm.css'
-import './styles/registerForm.css'
+import './styles/loginForm.css';
+import './styles/registerForm.css';
 import { fetchData } from "./DataProvider";
+import { useHistory } from "react-router-dom";
+import {USER_ID_COOKIE, USER_EMAIL_COOKIE, USER_TYPE_COOKIE } from './ConstantVariable';
 export default function FormValidation(props) {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    console.log(props.match.params.id);
+    let history = useHistory();
     useEffect(() => {
       document.body.style.backgroundColor = '#E8F3EF';
       document.body.style.overflowX = 'hidden';
       // const user = rememberMe ? localStorage.getItem('user') : '';
-
     });
+
     const convertLabel2Key = (label) => {
       switch (label) {
         case "Email":
@@ -42,22 +44,32 @@ export default function FormValidation(props) {
         dt.append(key, innerItems.childNodes[1].value);
         console.log(innerItems.childNodes[1].value);
         console.log(innerItems.childNodes[0].innerHTML);
+      }
 
-      }
-      dt.append("type", "job seeker");
-      for(var pair of dt.entries()) {
-        console.log(pair[0]+ ', '+ pair[1]);
-      }
+      dt.append("type", props.match.params.type);
+
       return dt;
     }
 
     const onSubmit = async (data) => {
       let formData = appendData(data);
       try {
+
         let resData = await fetchData("USER", "POST", formData);
-        
+        let email = '';
+        for(var pair of formData.entries()) {
+          if (pair[0] == 'email') {
+            email = pair[1];
+            break;
+          }
+        }
+
+        localStorage.setItem(USER_EMAIL_COOKIE, email);
+        localStorage.setItem(USER_TYPE_COOKIE, props.match.params.type);
+        history.push(RedirectTo('centerPage', props.match.params.type));
+
       } catch (error) {
-        alert("Duplicated Email, please use another email to register..");
+        alert(error);
         console.log(error);
       }
 
@@ -66,11 +78,17 @@ export default function FormValidation(props) {
       <div>
         <div style={{display: 'flex', flexDirection:'column'}}>
           <div style={{flex:1,top:0 ,width:'100%'}}>
-            <Navbar/>
+            <Navbar type={props.match.params.type}/>
           </div>
           <div style={{flex:1,display:'flex', flexDirection:'row', justifyContent:'flex-end'}}>
             <div style={{position:'relative',left:-140, top: 85}}>
-              <img src={CircleYellowSVG} style={{ height: 700, width: 800 }} alt="CircleSVG" />
+              {
+                (props.match.params.type == 'job_seeker')?
+                <img src={CircleGreenSVG} style={{ height: 700, width: 800 }} alt="CircleSVG" />
+                  :
+                <img src={CircleYellowSVG} style={{ height: 700, width: 800 }} alt="CircleSVG" />
+
+              }
             </div>
             <div style={{height: '50%', paddingLeft:30, width:'50%', position:'relative',left:-70, top: 200,boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
               <div class="title" align="center">Registration Form</div>

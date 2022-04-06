@@ -7,7 +7,7 @@ function Login(props){
   const [companyClassName, setCompanyClassName] = useState('InActiveTab');
   const [email, setEmail] = useState('');
   const [userPassword, setPassword] = useState('');
-
+  const [type, setUserType] = useState('');
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
@@ -60,6 +60,8 @@ function Login(props){
     }
 
     if (!(email === '' || userPassword === '')) setError(false);
+    if (activeCandidateBtn) setUserType('job_seeker');
+    else setUserType('recruiter');
   });
   //
   return(
@@ -124,7 +126,7 @@ function Login(props){
       </div>
       <div class="LoginFormOutest"style={{ paddingTop:'0px',height:'14.555%',left:100 }} >
         <div class="break" style={{ width:'20%' }}></div>
-        <a href={`${rootPath}/RegistrationPage`} class="SignUpTab" style={{ height:'50%',width:'60%' }}>
+        <a href={`${rootPath}/RegistrationPage/${type}`} class="SignUpTab" style={{ height:'50%',width:'60%' }}>
           <div>SIGN UP</div>
         </a>
         <div class="break" style={{ width:'20%' }}></div>

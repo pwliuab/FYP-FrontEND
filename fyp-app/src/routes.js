@@ -33,7 +33,7 @@ const routes = [
   },
 
   {
-    path:`${rootPath}/RegistrationPage/:id`,
+    path:`${rootPath}/RegistrationPage/:type`,
     component: RegistrationForm,
     exact: true,
     breadcrumbName: 'RegistrationPage'

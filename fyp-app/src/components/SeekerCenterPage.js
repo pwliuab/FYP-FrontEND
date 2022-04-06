@@ -2,13 +2,29 @@ import Navbar from './Navbar';
 import './styles/UserCenterPage.css';
 import React, { useState, useEffect } from 'react';
 import UserIconSVG from '../assets/Shape.svg';
+import { JBSeekerType, USER_ID_COOKIE, USER_EMAIL_COOKIE } from './ConstantVariable';
+import { Authentication } from './Authentication';
+import { useHistory } from "react-router-dom";
+import { RedirectTo } from './Redirection';
 
 export  function SeekerCenterPage(){
   const [activeCandidateBtn, handleBtnChange] = useState(true);
+  let history = useHistory();
+  useEffect(() => {
+
+    const CheckLogin = () => {
+      if (Authentication()) history.push(RedirectTo(null, null));
+    }
+    CheckLogin();
+
+  }, []);
+
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
     document.body.style.overflowX = 'hidden';
   });
+
+
   ////////////////////////////////////////////////////////////
   // flex is used to divide the page into 4 part
   // every part of the container has its own inner division,
@@ -21,7 +37,7 @@ export  function SeekerCenterPage(){
   return(
     <div style={{ display: 'flex', flexDirection:'column' }}>
         <div class="TopContainer" style={{ backgroundColor:'black' }}>
-          <Navbar/>
+          <Navbar type={JBSeekerType}/>
         </div>
         <div class="SecondContainer" style={{ display:'flex', flexBasis: 200 }}>
           <div style={{ display:'flex',flex:4, flexDirection:'row' }}>

@@ -4,6 +4,7 @@ import UserIconSVG from '../assets/Shape.svg';
 import './styles/JobAnalyResultPage.css';
 import LeftIconSVG from '../assets/Left.svg';
 import RightIconSVG from '../assets/Right.svg';
+import { USER_TYPE_COOKIE } from './ConstantVariable';
 
 const renderHistoGram = () => {
   let xCoordinate = 10;
@@ -22,7 +23,7 @@ function renderList() {
   // or backend dividing pages
   // it depends on how we handle stuff
   let listContent  = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17];
-  let indents = listContent.map((num)=>{
+  let indents = listContent.map((num) => {
     let evenStyle = 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1';
     let bgStyle = (num % 2 == 0) ? evenStyle : 'white';
     let style = {
@@ -129,6 +130,8 @@ function renderTable() {
 
 export  function JobAnalyResultPage() {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
+  let type = localStorage.getItem(USER_TYPE_COOKIE);
+
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
     document.body.style.overflowX = 'hidden';

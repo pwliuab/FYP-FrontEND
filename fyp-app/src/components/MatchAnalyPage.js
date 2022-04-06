@@ -5,6 +5,10 @@ import './styles/MatchAnalyPage.css';
 import LeftIconSVG from '../assets/Left.svg';
 import RightIconSVG from '../assets/Right.svg';
 import GoodSVG from '../assets/good.svg';
+import { Authentication } from './Authentication';
+import { useHistory } from "react-router-dom";
+import { RedirectTo } from './Redirection';
+import { USER_TYPE_COOKIE } from './ConstantVariable';
 
 const renderHistoGram = () => {
   let xCoordinate = 10;
@@ -220,6 +224,7 @@ function renderTable() {
   return indents;
 }
 
+
 export  function MatchAnalyPage() {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   const [resultList, setResultList] = React.useState([
@@ -229,6 +234,18 @@ export  function MatchAnalyPage() {
   3.15,
   5
 ]);
+
+let history = useHistory();
+let type = localStorage.getItem(USER_TYPE_COOKIE);
+useEffect(() => {
+
+  const CheckLogin = () => {
+    if (Authentication()) history.push(RedirectTo(null, null));
+  }
+  CheckLogin();
+
+}, []);
+
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
     document.body.style.overflowX = 'hidden';
@@ -236,7 +253,7 @@ export  function MatchAnalyPage() {
   return(
     <div style={{ display:'flex', flexDirection:'column' }}>
       <div class="TopContainer">
-        <Navbar/>
+        <Navbar type={type}/>
       </div>
       <div class="SecondContainer" style={{dispaly:'flex', flexBasis:870, flexDirection:'row'}}>
         <div style={{flex:1, display:'flex', flexDirection:'column'}}>

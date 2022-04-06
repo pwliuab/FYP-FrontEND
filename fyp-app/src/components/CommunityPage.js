@@ -4,6 +4,8 @@ import UserIconSVG from '../assets/Shape.svg';
 import './styles/CommunityPage.css';
 import LeftIconSVG from '../assets/Left.svg';
 import RightIconSVG from '../assets/Right.svg';
+import { USER_ID_COOKIE, USER_EMAIL_COOKIE, USER_TYPE_COOKIE} from './ConstantVariable';
+
 function renderList() {
   console.log('indents');
   // use array slice to divide pages
@@ -135,7 +137,7 @@ export  function CommunityPage() {
   return(
     <div style={{ display:'flex', flexDirection:'column' }}>
       <div class="TopContainer">
-        <Navbar/>
+      <Navbar type={localStorage.getItem(USER_TYPE_COOKIE)}/>
       </div>
       <div class="SecondContainer" style={{display: 'flex',flexBasis: 850, flexDirection:'row'}}>
         <div class="list" style={{flex: 1, display:'flex'}}>

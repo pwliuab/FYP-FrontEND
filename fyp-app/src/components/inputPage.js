@@ -6,6 +6,7 @@ import CircleGreenSVG from '../assets/circle.svg';
 import CircleYellowSVG from '../assets/yellowCircle.svg';
 import fileImage from '../assets/fileImage.png'
 import userimage from './user_icon.png';
+import { USER_TYPE_COOKIE } from './ConstantVariable';
 
 
 
@@ -126,7 +127,7 @@ let handleSubmit = async (e) => {
   return(
     <div style={{display: 'flex', flexDirection:'column'}}>
       <div style={{ backgroundColor:'black' }}>
-        <Navbar/>
+        <Navbar type={localStorage.getItem(USER_TYPE_COOKIE)}/>
       </div>
       <div style={{ display:'flex', flexBasis: 190 }}>
         <div style={{flex:2}}>

@@ -6,11 +6,28 @@ import UserIconSVG from '../assets/Shape.svg';
 import LeftIconSVG from '../assets/Left.svg';
 import SearchIconSVG from '../assets/Search.svg';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
+import { Authentication } from './Authentication';
+import { useHistory } from "react-router-dom";
+import { RedirectTo } from './Redirection';
+import { JBSeekerType } from './ConstantVariable';
+import { USER_TYPE_COOKIE } from './ConstantVariable';
 
 export  function SeekerFilterPage(){
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   const [isOpenList, handleListChange] = useState([false, false, false, false, false, false]);
   const [currentOpenList, handleCurrentOpenList] = useState("");
+
+
+  let history = useHistory();
+  useEffect(() => {
+
+    const CheckLogin = () => {
+      if (Authentication()) history.push(RedirectTo(null, null));
+    }
+    CheckLogin();
+
+  }, []);
+
 
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
@@ -81,7 +98,7 @@ export  function SeekerFilterPage(){
   return(
     <div  style={{ display: 'flex', flexDirection:'column' }}>
         <div class="TopContainer" style={{ backgroundColor:'black' }}>
-          <Navbar/>
+          <Navbar type={JBSeekerType}/>
         </div>
         <div className="filterPage">
 

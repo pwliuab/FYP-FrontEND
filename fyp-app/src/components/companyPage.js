@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import CircleGreenSVG from '../assets/circle.svg';
 import CircleYellowSVG from '../assets/yellowCircle.svg';
 import userimage from './user_icon.png';
+import { USER_ID_COOKIE, USER_EMAIL_COOKIE, USER_TYPE_COOKIE} from './ConstantVariable';
 
 function Company(){
   const [activeCandidateBtn, handleBtnChange] = useState(true);
@@ -15,7 +16,7 @@ function Company(){
   return(
     <div style={{display: 'flex', flexDirection:'column'}}>
       <div style={{ backgroundColor:'black' }}>
-        <Navbar/>
+        <Navbar type={localStorage.getItem(USER_TYPE_COOKIE)}/>
       </div>
       <div style={{ display:'flex', flexBasis: 200 }}>
         <div align='left' style={{ marginLeft:200,marginTop:30, display:'flex',flex:4, flexDirection:'row' }}>
