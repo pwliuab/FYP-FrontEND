@@ -3,7 +3,63 @@ import './styles/UserCenterPage.css';
 import React, { useState, useEffect } from 'react';
 import UserIconSVG from '../assets/Shape.svg';
 
+import Axios from "axios";
+import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, List, message, Avatar } from 'antd';
+import VirtualList from 'rc-virtual-list';
+
+const jobColumns = [
+  {
+    dataIndex: "Name",
+    width: 150
+  },
+];
+
+const applicationColumns = [
+  {
+    dataIndex: "Name",
+    width: 150
+  },
+];
+
 export  function SeekerCenterPage(){
+
+  const [state1, setstate1] = useState([]);
+  const [loading1, setloading1] = useState(true);
+  const [state2, setstate2] = useState([]);
+  const [loading2, setloading2] = useState(true);
+
+  useEffect(() => {
+    getData1();
+  }, []);
+  useEffect(() => {
+    getData2();
+  }, []);
+
+  const getData1 = async () => {
+    await Axios.get("https://jsonplaceholder.typicode.com/comments").then(
+      res => {
+        setloading1(false);
+        setstate1(
+          res.data.map(row => ({
+            Name: row.name,
+          }))
+        );
+      }
+    );
+  };
+  const getData2 = async () => {
+    await Axios.get("https://jsonplaceholder.typicode.com/users").then(
+      res => {
+        setloading2(false);
+        setstate2(
+          res.data.map(row => ({
+            Name: row.name,
+          }))
+        );
+      }
+    );
+  };
+
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
@@ -59,10 +115,21 @@ export  function SeekerCenterPage(){
               Saved Jobs
             </div>
           </div>
+          <br/><br/><br/><br/>
           <div style={{ display:'flex',flex:4, flexDirection:'row' }}>
             <div class="SavedJobsContent" style={{ flex:0.95,position:'relative',
-                                                  left:40
-                                          }}>
+                                                  left:40}}>
+                {loading1 ? (
+                  "Loading"
+                ) : (
+                  <Table
+                    showHeader={false}
+                    columns={jobColumns}
+                    dataSource={state1}
+                    pagination={ false }
+                    scroll={{ y: 140  }}
+                  />
+                )}
             </div>
           </div>
         </div>
@@ -74,11 +141,22 @@ export  function SeekerCenterPage(){
             Application Status
           </div>
         </div>
+        <br/><br/><br/><br/>
         <div style={{ display:'flex',flex:4, flexDirection:'row' }}>
           <div class="ApplicationStatusContent" style={{ flex:0.95,position:'relative',
                                                   left:40
                                                 }}>
-
+            {loading2 ? (
+              "Loading"
+            ) : (
+              <Table
+                showHeader={false}
+                columns={applicationColumns}
+                dataSource={state2}
+                pagination={ false }
+                scroll={{ y: 140  }}
+              />
+            )}
           </div>
         </div>
         </div>

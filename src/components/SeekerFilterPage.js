@@ -1,4 +1,7 @@
-import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space } from 'antd';
+import React, { useState, useEffect } from 'react';
+import Axios from "axios";
+import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, List, message, Avatar } from 'antd';
+import VirtualList from 'rc-virtual-list';
 import './styles/filter.css';
 
 const { Header, Content, Footer } = Layout;
@@ -15,78 +18,47 @@ function handleChange(value) {
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: text => <a>{text}</a>,
+    title: "Name",
+    dataIndex: "Name",
+    width: 150
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: tags => (
-      <>
-        {tags.map(tag => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (text, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
+    title: "Email",
+    dataIndex: "Email",
+    width: 150
+  }
 ];
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
+function SeekerFilterPage() {
 
-const SeekerFilterPage = () => (
+const [state, setstate] = useState([]);
+const [loading, setloading] = useState(true);
+
+useEffect(() => {
+  getData();
+}, []);
+
+const getData = async () => {
+
+
+
+
+  await Axios.get("https://jsonplaceholder.typicode.com/comments").then(
+    res => {
+      setloading(false);
+      setstate(
+        res.data.map(row => ({
+          Name: row.name,
+          Email: row.email,
+          id: row.id
+        }))
+      );
+    }
+  );
+};
+
+
+return (
   <Layout className="layout">
     <Header>
       <div className="logo" />
@@ -212,7 +184,16 @@ const SeekerFilterPage = () => (
 
 
         <div>
-        <Table columns={columns} dataSource={data}></Table>
+          {loading ? (
+            "Loading"
+          ) : (
+            <Table
+              columns={columns}
+              dataSource={state}
+              pagination={{ pageSize: 50 }}
+              scroll={{ y: 240 }}
+            />
+          )}
         </div>
 
       </div>
@@ -220,6 +201,7 @@ const SeekerFilterPage = () => (
     </Content>
     <Footer style={{ textAlign: 'center' }}>Resume Matching ©2022 Created by HKUST</Footer>
   </Layout>
-);
+)
+}
 
 export default SeekerFilterPage;

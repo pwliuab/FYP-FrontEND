@@ -6,7 +6,7 @@ import CircleGreenSVG from '../assets/circle.svg';
 import CircleYellowSVG from '../assets/yellowCircle.svg';
 import userimage from './user_icon.png';
 
-function Company(){
+function Company() {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';

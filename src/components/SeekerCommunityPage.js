@@ -6,6 +6,19 @@ import LeftIconSVG from '../assets/Left.svg';
 import SearchIconSVG from '../assets/Search.svg';
 import CirclesIconSVG from '../assets/CombineCircle.svg'
 
+import Axios from "axios";
+import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, List, message, Avatar } from 'antd';
+import VirtualList from 'rc-virtual-list';
+
+const columns = [
+  {
+    title: "Available Job Names",
+    dataIndex: "Name",
+    width: 150
+  },
+];
+
+
 function renderList() {
   console.log('indents');
   // use array slice to divide pages
@@ -122,6 +135,28 @@ function renderTable() {
 
 
 export  function SeekerCommunityPage() {
+
+  const [state, setstate] = useState([]);
+  const [loading, setloading] = useState(true);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    await Axios.get("https://jsonplaceholder.typicode.com/comments").then(
+      res => {
+        setloading(false);
+        setstate(
+          res.data.map(row => ({
+            Name: row.name,
+          }))
+        );
+      }
+    );
+  };
+
+
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
@@ -139,7 +174,16 @@ export  function SeekerCommunityPage() {
             <div class="list" style={{flex: 1.5}}>
               <span style={{position:'relative', top:25, margin:10, color:'grey', fontSize:14}}>Job List</span>
             </div>
-            {renderList()}
+            {loading ? (
+              "Loading"
+            ) : (
+              <Table
+                columns={columns}
+                dataSource={state}
+                pagination={false}
+                scroll={{ y: 725 }}
+              />
+            )}
           </div>
         </div>
         <div style={{display:'flex', flexDirection:'column', flex:2}}>
