@@ -1,4 +1,5 @@
 import './styles/Login.css'
+import { fetchData } from "./DataProvider";
 import React, { useState, useEffect } from 'react';
 function Login(props){
   const [activeCandidateBtn, setBtn] = useState(true);
@@ -38,8 +39,8 @@ function Login(props){
     // Showing error message if error is true
     const renderErrorMessage = () => {
     	return (
-    	<span style={{color: 'red', fontSize:34, }}
-        className="error">
+    	<span style={{position:'relative', top:-25, color: 'red', fontSize:34, }}
+        >
     		Please enter all the fields
     	</span>
     	);

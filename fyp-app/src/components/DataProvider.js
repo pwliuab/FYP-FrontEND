@@ -3,7 +3,7 @@ let URL = "http://143.89.130.207:3000/web_api/";
 let USER_API = 'users/';
 let MATCHING_API = "matching/";
 let JDS_API = "JDS/";
-let VALIDATION_API = 'users/validation/';
+let VALIDATION_API = 'users/validation/validateAccount/validateAccount';
 
 let USER = "USER";
 let MATCHING = "MATCHING";
