@@ -84,7 +84,7 @@ return (
         <div style={{flex:1, display:'flex', justifyContent:'center', alignItems:'center'}}>
           <div className="filterPageSearchContent" style={{position:'relative',width:'60%', backgroundColor:'white', borderRadius: 30, display:'flex', justifyContent:'center', alignItems:'center'}}>
 
-              <Select mode="tags" size={'large'} style={{ width: '100%' }} placeholder="Job Title, Compony" onChange={handleChange}>
+              <Select className="input" mode="tags" size={'large'} style={{ width: '100%' }} placeholder="Job Title, Compony" onChange={handleChange}>
                 {children}
               </Select>
             <div  style={{width:'100%', position:'absolute', backgroundColor:'green', top:'100%', zIndex: 1}}>
@@ -135,7 +135,7 @@ return (
               <div style={{flex:0.8, }}/>
 
               <div style={{flex:0.4, }}/>
-              <Select defaultValue="Job Industries" size={'large'} style={{ width: '100%' }} onChange={handleChange}>
+              <Select className = "select" defaultValue="Job Industries" size={'large'} style={{ width: '100%' }} onChange={handleChange}>
                 <Option value="jack">Jack</Option>
                 <Option value="lucy">Lucy</Option>
                 <Option value="disabled" disabled>
