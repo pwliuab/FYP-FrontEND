@@ -1,6 +1,8 @@
 import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, Input } from 'antd';
 import { Upload, message, Button } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
+import React, {useState, useRef} from 'react';
+import JoditEditor from "jodit-react";
 import './styles/filter.css';
 
 const { Header, Content, Footer } = Layout;
@@ -41,7 +43,16 @@ const props = {
   },
 };
 
-const UploadPage = () => (
+const UploadPage = ({}) => {
+  const editor = useRef(null)
+  const [content, setContent] = useState('')
+
+  const config = {
+      readonly: false // all options from https://xdsoft.net/jodit/doc/
+  }
+
+
+  return (
 	<Layout className="layout">
 	<Header>
 		<div className="logo" />
@@ -165,7 +176,14 @@ const UploadPage = () => (
 			<br />
 
 			<div style={{ display:'flex', justifyContent:'center', alignItems:'center' }}>
-    		<TextArea style={{ width:'88%' }} showCount maxLength={140} onChange={onChange} />
+      <JoditEditor
+              ref={editor}
+              value={content}
+              config={config}
+              tabIndex={1} // tabIndex of textarea
+      onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+      onChange={newContent => {}}
+      />
 			</div>
 
 			<br />
@@ -216,5 +234,6 @@ const UploadPage = () => (
 	<Footer style={{ textAlign: 'center' }}>Resume Matching ©2022 Created by HKUST</Footer>
 </Layout>
 );
+}
 
 export default UploadPage;
