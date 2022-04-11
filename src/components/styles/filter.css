@@ -2,6 +2,22 @@
   border-radius:20px;
 }
 
+.filterPageSearchContent .ant-input {
+  border-radius:20px;
+}
+
+.button-css .ant-btn-primary {
+  border-radius:20px;
+}
+
+.dragger-css .ant-dragger {
+  border-radius:20px;
+}
+
+.jodit-wysiwyg {
+  background-color: #FFFFFF;
+}
+
 .site-layout-content {
   min-height: 280px;
   padding: 24px;

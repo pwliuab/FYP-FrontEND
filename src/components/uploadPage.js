@@ -166,7 +166,7 @@ const UploadPage = ({}) => {
 							<Option value="disabled" disabled>
 								Disabled
 							</Option>
-							<Option value="Yiminghe">yiminghe</Option>
+							<Option value="Yiminghe">yiming</Option>
 						</Select>
 					</div>
 				</div>
@@ -177,18 +177,19 @@ const UploadPage = ({}) => {
 
 			<div style={{ display:'flex', justifyContent:'center', alignItems:'center' }}>
       <JoditEditor
-              ref={editor}
-              value={content}
-              config={config}
-              tabIndex={1} // tabIndex of textarea
-      onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-      onChange={newContent => {}}
+          style={{}}
+          ref={editor}
+          value={content}
+          config={config}
+          tabIndex={1} // tabIndex of textarea
+          onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+          onChange={newContent => {}}
       />
 			</div>
 
 			<br />
 
-			<div style={{ display:'flex', justifyContent:'center', alignItems:'center' }}>
+			<div className="button-css" style={{ display:'flex', justifyContent:'center', alignItems:'center' }}>
 				<Button type="primary" style={{ width: '10%' }}>Upload</Button>
 			</div>
 
@@ -200,7 +201,7 @@ const UploadPage = ({}) => {
 <div style={{display:'flex', flexDirection:'column', flex:1, margin:70, background:'rgba(33, 130, 94, 0.31)', borderRadius:'40px',}}>
 
 <br /><br /><br />
-			<div style={{ display:'flex', justifyContent:'center', alignItems:'center' }}>
+			<div className="dragger-css" style={{ display:'flex', justifyContent:'center', alignItems:'center' }}>
 				<Dragger style={{ width:'100%' }} {...props}>
 			    <p className="ant-upload-drag-icon">
 			      <InboxOutlined />
@@ -218,7 +219,7 @@ const UploadPage = ({}) => {
 			<br /><br />
 
 
-			<div style={{ display:'flex', justifyContent:'center', alignItems:'center' }}>
+			<div className="button-css" style={{ display:'flex', justifyContent:'center', alignItems:'center' }}>
 				<Button type="primary" style={{ width: '10%' }}>Upload File</Button>
 			</div>
 

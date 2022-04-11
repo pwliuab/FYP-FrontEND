@@ -8,6 +8,7 @@ import SeekerCenterPage from './components/SeekerCenterPage';
 import CommunityPage from './components/CommunityPage';
 import LoginForm from './components/loginForm';
 import RegisterForm from './components/registerForm';
+import ForgetPassword from './components/forgetPage';
 import UploadPage from './components/uploadPage';
 import JobAnalyResultPage from './components/JobAnalyResultPage';
 import MatchAnalyPage from './components/MatchAnalyPage';
@@ -106,6 +107,12 @@ const routes = [
     component: SeekerFilterPage,
     exact: true,
     breadcrumbName: 'SeekerFilterPage'
+  },
+  {
+    path:`${rootPath}/forgetPassword`,
+    component: ForgetPassword,
+    exact: true,
+    breadcrumbName: 'ForgetPassword'
   },
   {
     path:`${rootPath}/test`,
