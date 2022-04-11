@@ -18,6 +18,8 @@ const renderHistoGram = () => {
   return indents;
 }
 
+
+
 function renderList() {
   // use array slice to divide pages
   // or backend dividing pages
@@ -38,7 +40,11 @@ function renderList() {
         Job Post {num}
       </div>
     );
+
+
   });
+
+
 // static
   let styless = {
 display:'flex', flexDirection:'row',
@@ -66,23 +72,84 @@ display:'flex', flexDirection:'row',
   return indents;
 }
 
-function renderTable() {
-  let contentPage = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
-  let indents = contentPage.map((item, index) => {
-    const contentArray = [
-      {ranking: 'Ranking', name: 'Name', contact: 'Email', overallScore: 'Overall Score',download:''},
-      {ranking: '1', name: 'Liam', contact: '4399.com', overallScore: '95',download:''},
-      {ranking: '2', name: 'Lv Zhi Yuan', contact: '4399.com', overallScore: '10',download:''},
-      {ranking: '3', name: 'Zhang wei wen', contact: '4399.com', overallScore: '9',download:''},
-      {ranking: '4', name: 'Zhang ge', contact: '4399.com', overallScore: '8',download:''},
-      {ranking: '5', name: 'DI ge', contact: '4399.com', overallScore: '7',download:''},
-      {ranking: '6', name: 'DI NUO', contact: '4399.com', overallScore: '6',download:''},
-      {ranking: '7', name: 'Raymond', contact: '4399.com', overallScore: '5',download:''},
-      {ranking: '8', name: 'Singer Raymond', contact: '4399.com', overallScore: '4',download:''},
-      {ranking: '9', name: 'Singer Zhang', contact: '4399.com', overallScore: '3',download:''},
-      {ranking: '10', name: 'LV Zhi Jin', contact: '4399.com', overallScore: '2',download:''},
-    ]
+
+function renderTable(pages, rows=10) {
+  let lowerBound = pages * rows - rows;
+  let upperBound = pages * rows - 1;
+  let title = {ranking: 'Ranking', name: 'Name', contact: 'Email', overallScore: 'Overall Score',download:''};
+
+  let contentPage =
+   [
+        {ranking: '1', name: 'Liam', contact: '4399.com', overallScore: '95',download:''},
+        {ranking: '2', name: 'Lv Zhi Yuan', contact: '4399.com', overallScore: '10',download:''},
+        {ranking: '3', name: 'Zhang wei wen', contact: '4399.com', overallScore: '9',download:''},
+        {ranking: '4', name: 'Zhang ge', contact: '4399.com', overallScore: '8',download:''},
+        {ranking: '5', name: 'DI ge', contact: '4399.com', overallScore: '7',download:''},
+        {ranking: '6', name: 'DI NUO', contact: '4399.com', overallScore: '6',download:''},
+        {ranking: '7', name: 'Raymond', contact: '4399.com', overallScore: '5',download:''},
+        {ranking: '8', name: 'Singer Raymond', contact: '4399.com', overallScore: '4',download:''},
+        {ranking: '9', name: 'Singer Zhang', contact: '4399.com', overallScore: '3',download:''},
+        {ranking: '10', name: 'LV Zhi Jin', contact: '4399.com', overallScore: '2',download:''},
+        {ranking: '11', name: 'LV Zhi Jin', contact: '4399.com', overallScore: '2',download:''},
+        {ranking: '12', name: 'LV Zhi Jin', contact: '4399.com', overallScore: '2',download:''},
+        {ranking: '13', name: 'Liam', contact: '4399.com', overallScore: '95',download:''},
+        {ranking: '14', name: 'Lv Zhi Yuan', contact: '4399.com', overallScore: '10',download:''},
+        {ranking: '15', name: 'Zhang wei wen', contact: '4399.com', overallScore: '9',download:''},
+        {ranking: '4', name: 'Zhang ge', contact: '4399.com', overallScore: '8',download:''},
+        {ranking: '5', name: 'DI ge', contact: '4399.com', overallScore: '7',download:''},
+        {ranking: '6', name: 'DI NUO', contact: '4399.com', overallScore: '6',download:''},
+        {ranking: '7', name: 'Raymond', contact: '4399.com', overallScore: '5',download:''},
+        {ranking: '8', name: 'Singer Raymond', contact: '4399.com', overallScore: '4',download:''},
+        {ranking: '9', name: 'Singer Zhang', contact: '4399.com', overallScore: '3',download:''},
+        {ranking: '10', name: 'LV Zhi Jin', contact: '4399.com', overallScore: '2',download:''},
+        {ranking: '11', name: 'LV Zhi Jin', contact: '4399.com', overallScore: '2',download:''},
+        {ranking: '12', name: 'LV Zhi Jin', contact: '4399.com', overallScore: '2',download:''},
+      ];
+
+  contentPage = contentPage.filter((item, index) => {
+    return index >= lowerBound && index <= upperBound;
+  });
+
+  console.log(contentPage)
+  console.log(lowerBound + ": Lower Bound");
+  console.log(upperBound + ": upperBound");
+  console.log();
+  let indents = [];
+  var tempChildIndents = [];
+  for (let it in title) {
+
+    const contentStyles = {
+      flex: 1,
+      padding: 10,
+      paddingLeft: 12,
+    }
+    let contentStyle = {...contentStyles};
+    contentStyle.fontWeight = 'bold';
+    contentStyle.flex = (it == 'download') ? 0.2 : 1;
+    tempChildIndents.push(
+      <div style={contentStyle}>
+        {title[it]}
+      </div>
+    )
+  }
+  const styles = {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+  }
+
+  styles.background = 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1';
+
+  indents.push(
+    <div style={styles}>
+          {tempChildIndents}
+        </div>
+    );
+  let tempIndents = contentPage.map((item, index) => {
+
 
     const contentStyles = {
       flex: 1,
@@ -97,24 +164,28 @@ function renderTable() {
       background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1',
       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
     } // pass by reference, so need to create a new one every time;
+
     styles.background = ((index % 2) == 0) ?
     'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1'
       :
     'white';
+
     styles.borderTopLeftRadius = (index == 0) ? 8 : 0;
     styles.borderTopRightRadius = (index == 0) ? 8 : 0;
     styles.borderBottomRightRadius = (index == (contentPage.length - 1)) ? 8 : 0;
     styles.borderBottomLeftRadius = (index == (contentPage.length - 1)) ? 8 : 0;
 
     let childIndents = [];
-    if (index < contentArray.length) {
-      for(let item in contentArray[index]){
+
+    if (index < contentPage.length) {
+
+      for (let it in item) {
         let contentStyle = {...contentStyles};
         contentStyle.fontWeight = (index == 0) ? 'bold' : '';
-        contentStyle.flex = (item == 'download') ? 0.2 : 1;
+        contentStyle.flex = (it == 'download') ? 0.2 : 1;
         childIndents.push(
           <div style={contentStyle}>
-            {contentArray[index][item]}
+            {item[it]}
           </div>
         )
       }
@@ -125,11 +196,13 @@ function renderTable() {
       </div>
     )
   })
+  indents.push(tempIndents);
   return indents;
 }
 
 export  function JobAnalyResultPage() {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
+  const [pages, setPages] = useState(1);
   let type = localStorage.getItem(USER_TYPE_COOKIE);
 
   useEffect(() => {
@@ -184,7 +257,7 @@ export  function JobAnalyResultPage() {
           </div>
           <div style={{display:'flex', margin:20, flex:1, backgroundColor:'white', flexDirection:'column',
                 borderRadius:8, marginTop: 40, marginBottom: 40}}>
-            {renderTable()}
+            {renderTable(pages, 10)}
           </div>
           <div style={{height: 30, display:'flex', flexDirection:'row'}}>
             <div style={{flex:8}}>
@@ -197,7 +270,10 @@ export  function JobAnalyResultPage() {
               <span style={{position:'relative', top: -30, color: 'grey'}}>
                 Rows per page:
                 <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30,}} alt="LeftIconSVG" />
-                <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
+                <img src={LeftIconSVG} onClick={() => {
+                  setPages(pages + 1)
+                  console.log(pages + "erewrrwerwerw");
+                }} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
               </span>
             </div>
           </div>
