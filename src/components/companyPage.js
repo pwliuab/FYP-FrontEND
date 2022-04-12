@@ -5,6 +5,38 @@ import React, { useState, useEffect } from 'react';
 import CircleGreenSVG from '../assets/circle.svg';
 import CircleYellowSVG from '../assets/yellowCircle.svg';
 import userimage from './user_icon.png';
+import ReactDOM from 'react-dom';
+import { Line } from '@ant-design/plots';
+
+const DemoLine = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    asyncFetch();
+  }, []);
+
+  const asyncFetch = () => {
+    fetch('https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json')
+      .then((response) => response.json())
+      .then((json) => setData(json))
+      .catch((error) => {
+        console.log('fetch data failed', error);
+      });
+  };
+  const config = {
+    data,
+    padding: 'auto',
+    xField: 'Date',
+    yField: 'scales',
+    xAxis: {
+      // type: 'timeCat',
+      tickCount: 5,
+    },
+  };
+
+  return <Line {...config} />;
+};
+
 
 function Company() {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
@@ -26,6 +58,12 @@ function Company() {
               Working Location: Hong Kong | Shanghai | Shenzhen<br/>
               152 job Posts | 20000 saved | 15000 Applied
             </p>
+          </div>
+        </div>
+        <div style={{display:'flex', flex:1}}>
+          <div style={{display:'flex',flex:1, margin:20, backgroundColor:'white', borderRadius:20}}>
+
+            <DemoLine/>
           </div>
         </div>
       </div>
