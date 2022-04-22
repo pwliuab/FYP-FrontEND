@@ -11,6 +11,8 @@ import SeekerCommunityPage from './components/SeekerCommunityPage';
 import InputPage from './components/inputPage';
 import CompanyPage from './components/companyPage'
 import RegistrationForm from './components/RegistrationForm'
+import UploadPage from './components/uploadPage';
+
 const rootPath = process.env.PUBLIC_URL;
 const routes = [
   {
@@ -86,6 +88,12 @@ const routes = [
     component: InputPage,
     exact: true,
     breadcrumbName: 'InputPage'
+  },
+  {
+    path:`${rootPath}/UploadPage`,
+    component: UploadPage,
+    exact: true,
+    breadcrumbName: 'UploadPage'
   },
   {
   path:`${rootPath}/communityPage`,

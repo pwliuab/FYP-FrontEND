@@ -1,7 +1,12 @@
 import './styles/Login.css'
 import { fetchData } from "./DataProvider";
 import React, { useState, useEffect } from 'react';
+import { RedirectTo } from './Redirection';
+import { useHistory } from "react-router-dom";
+import { USER_ID_COOKIE, USER_EMAIL_COOKIE, USER_TYPE_COOKIE,USER_ORG_COOKIE} from './ConstantVariable';
+
 function Login(props){
+  let history = useHistory();
   const [activeCandidateBtn, setBtn] = useState(true);
   const [placeholderValue, setPlaceHolder] = useState('Candidate Email');
   const [candidateClassName, setCandidateClassName] = useState('ActiveTab');
@@ -26,14 +31,39 @@ function Login(props){
   };
 
   // Handling the form submission
-  const handleSubmit = (e) => {
+  const appendData = () => {
+    let formData = new FormData();
+    formData.append('password', userPassword);
+    formData.append('email', email);
+    return formData
+  }
+
+
+  const handleSubmit = async (e) => {
   	e.preventDefault();
   	if (email === '' || userPassword === '') {
   	setError(true);
     alert('please enter your information');
   	} else {
-  	setSubmitted(true);
-  	setError(false);
+      	setSubmitted(true);
+        let data = appendData();
+        try {
+            let response = await fetchData( "USER", 'POST', data, "validation/email/password");
+            if (response['result_code'] == '200') {
+              let type = (activeCandidateBtn)? 'job_seeker' : 'recruiter';
+              localStorage.setItem(USER_TYPE_COOKIE, response['user_type']);
+              localStorage.setItem(USER_ID_COOKIE, response['user_id']);
+              localStorage.setItem(USER_EMAIL_COOKIE, response['user_email']);
+              localStorage.setItem(USER_ORG_COOKIE, response['org_id']);
+              history.push(RedirectTo('centerPage', type));
+              console.log(response);
+
+          }
+        } catch (e) {
+          console.log(e);
+        }
+
+      	setError(false);
   	}
   };
     // Showing error message if error is true

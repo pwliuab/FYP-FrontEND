@@ -5,7 +5,8 @@ import './styles/JobAnalyResultPage.css';
 import LeftIconSVG from '../assets/Left.svg';
 import RightIconSVG from '../assets/Right.svg';
 import { USER_TYPE_COOKIE } from './ConstantVariable';
-
+import ReactDOM from 'react-dom';
+import { Column } from '@ant-design/plots';
 const renderHistoGram = () => {
   let xCoordinate = 10;
   let transformStr = [1,2,3,4,5,6,7,8,9,10];
@@ -16,6 +17,90 @@ const renderHistoGram = () => {
     return(<rect width={yCoordinate} height={45} style={{fill:'rgba(176, 190, 197, 0.32)'}} transform={transf}/>)
   })
   return indents;
+}
+
+
+const DemoColumn = () => {
+  const data = [
+    {
+      type: '1',
+      sales: 38,
+    },
+    {
+      type: '2',
+      sales: 52,
+    },
+    {
+      type: '3',
+      sales: 61,
+    },
+    {
+      type: '4',
+      sales: 100,
+    },
+    {
+      type: '5',
+      sales: 48,
+    },
+    {
+      type: '6',
+      sales: 38,
+    },
+    {
+      type: '7',
+      sales: 38,
+    },
+    {
+      type: '8',
+      sales: 38,
+    },
+    {
+      type: '9',
+      sales: 38,
+    },
+    {
+      type: '10',
+      sales: 38,
+    },
+    {
+      type: '11',
+      sales: 38,
+    },
+    {
+      type: '12',
+      sales: 38,
+    },
+  ];
+  const config = {
+    data,
+    xField: 'type',
+    yField: 'sales',
+    label: {
+      // 可手动配置 label 数据标签位置
+      position: 'middle',
+      // 'top', 'bottom', 'middle',
+      // 配置样式
+      style: {
+        fill: '#FFFFFF',
+        opacity: 0.6,
+      },
+    },
+    xAxis: {
+      label: {
+        autoHide: true,
+        autoRotate: false,
+      },
+    },
+    meta: {
+      type: {
+        alias: '类别',
+      },
+      sales: {
+        alias: '销售额',
+      },
+    },
+  };
+  return <Column {...config} />;
 }
 
 
@@ -212,7 +297,7 @@ export  function JobAnalyResultPage() {
   return(
     <div style={{ display:'flex', flexDirection:'column' }}>
       <div class="TopContainer">
-        <Navbar/>
+        <Navbar type={'recruiter'}/>
       </div>
       <div class="SecondContainer" style={{display: 'flex',flexBasis: 870, flexDirection:'column'}}>
         <div style={{flex:1, flexDirection:'row', display:'flex'}}>
@@ -240,13 +325,9 @@ export  function JobAnalyResultPage() {
               <p>Mean: 76 | SD: 7 | Highest: 95 | Lowest: 20</p>
             </div>
           </div>
-          <div style={{display:'flex', flex:1}}>
-            <div class="candidateEva" style={{display:'flex',flex:1, margin:20, backgroundColor:'white', borderRadius:20}}>
-              <svg style={{flex:1}}>
-                <text style={{fill:'black', fontWeight:'bold', fontSize: 25}} transform="translate(20,30)">Score Histogram</text>
-                <text style={{fill:'grey'}} transform="translate(20,50)">Statistics subinformation</text>
-                {renderHistoGram()}
-              </svg>
+          <div style={{display:'flex', flex:1, justifyContent:'flex-end'}}>
+            <div class="candidateEva" style={{display:'flex',flex:0.8, margin:20, backgroundColor:'white', borderRadius:20, justifyContent:'center', alignItems:'center'}}>
+              <DemoColumn/>
             </div>
           </div>
 
@@ -270,10 +351,7 @@ export  function JobAnalyResultPage() {
               <span style={{position:'relative', top: -30, color: 'grey'}}>
                 Rows per page:
                 <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30,}} alt="LeftIconSVG" />
-                <img src={LeftIconSVG} onClick={() => {
-                  setPages(pages + 1)
-                  console.log(pages + "erewrrwerwerw");
-                }} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
+                <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
               </span>
             </div>
           </div>

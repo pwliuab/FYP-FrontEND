@@ -9,56 +9,10 @@ import { Authentication } from './Authentication';
 import { useHistory } from "react-router-dom";
 import { RedirectTo } from './Redirection';
 import { JBSeekerType, USER_ID_COOKIE, USER_EMAIL_COOKIE } from './ConstantVariable';
+import { fetchData, appendData, JOB_POST } from './DataProvider';
+import parse from "html-react-parser";
 
 
-function renderList() {
-  console.log('indents');
-  // use array slice to divide pages
-  // or backend dividing pages
-  // it depends on how we handle stuff
-  let listContent  = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17];
-  let indents = listContent.map((num)=>{
-    let evenStyle = 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1';
-    let bgStyle = (num % 2 == 0) ? evenStyle : 'white';
-    let style = {
-      flex:1,
-      paddingLeft: 10,
-      paddingTop: 10,
-      background: bgStyle,
-      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'
-    }
-    return(
-      <div class="ListItem" style={style}>
-        Job Post {num}
-      </div>
-    );
-  });
-// static
-  let styless = {
-display:'flex', flexDirection:'row',
-    flex:1.5,
-    paddingLeft: 10,
-    paddingTop: 10,
-    background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1',
-    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-  }
-
-  indents.push(
-    <div style={styless}>
-      <div style={{flex:1}}>
-
-      </div>
-      <div style={{flex:1}}>
-        <span style={{position:'relative', color:'grey'}}>
-          1-17 of 100 items
-        </span>
-          <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30}} alt="LeftIconSVG" />
-          <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
-      </div>
-    </div>
-  );
-  return indents;
-}
 
 
 function renderTable() {
@@ -128,11 +82,169 @@ function renderTable() {
 
 export  function SeekerCommunityPage() {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
-
+  const [jobPosts, setJobPost] = useState([]);
+  const [postIndex, setCurrentPostIndex] = useState(0);
+  const [lowerBound, setLowerBound] = useState(0);
+  const [upperBound, setUpperBound] = useState(20);
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
     document.body.style.overflowX = 'hidden';
   });
+
+  function renderList() {
+    console.log('indents');
+    // use array slice to divide pages
+    // or backend dividing pages
+    // it depends on how we handle stuff
+    let listContent  = [...jobPosts];
+    while (listContent.length != 20) {
+      listContent.push({empty:true});
+    }
+    console.log(listContent);
+
+    let indents = listContent.map((num, index)=>{
+      let evenStyle = 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1';
+      let bgStyle = (index % 2 == 0) ? evenStyle : 'white';
+      let style = {
+        flex:1,
+        paddingLeft: 10,
+        paddingTop: 10,
+        background: bgStyle,
+        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+        maxHeight:50,
+        minHeight:50,
+        minWidth:200,
+      }
+
+      return(
+          num['empty'] ==null ?
+          <div class="ListItem" onClick={()=>{setCurrentPostIndex(index);}} id={index} style={style}>
+            Job Post {index + 1}
+          </div>
+            :
+            <div class="ListItem" style={style}>
+            </div>
+
+
+      );
+    });
+  // static
+
+    let styless = {
+      display:'flex', flexDirection:'row',
+      flex:1.5,
+      paddingLeft: 10,
+      paddingTop: 10,
+      background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1',
+      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+      maxHeight:50,
+      minHeight:50,
+      minWidth:200,
+    }
+
+    indents = indents.filter((item, index) => {
+        console.log((index >= lowerBound && index < upperBound));
+       return (index >= lowerBound && index < upperBound);
+    });
+
+    indents.push(
+      <div style={styless}>
+        <div style={{flex:1}}>
+        </div>
+        <div style={{flex:1, maxWidth:300, minWidth:200,}}>
+          <span style={{position:'relative', color:'grey'}}>
+            1-20 of 100 items
+          </span>
+            <img src={LeftIconSVG} onClick={()=>{
+              if (lowerBound == 0 || upperBound == 20) return;
+              setLowerBound(lowerBound - 20);
+              setUpperBound(upperBound - 20);
+            }} style={{position:'relative', top:10, height:30, width:30}} alt="LeftIconSVG" />
+            <img onClick={()=>{
+              if (upperBound >= jobPosts.length) return;
+              setLowerBound(lowerBound + 20);
+              setUpperBound(upperBound + 20);
+            }} src={LeftIconSVG} onClick={()=>{}} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
+        </div>
+      </div>
+    );
+
+
+    console.log(indents);
+    return indents;
+  }
+
+
+  let handleAllPostsFetch = async () => {
+    let params = 'all'
+    let response = await fetchData(JOB_POST, 'GET', params);
+    let [r1, r2] = await Promise.all([
+      fetchData(JOB_POST, 'GET', params),
+      fetchData(JOB_POST, 'GET', params)
+    ]);
+    console.log(r1);
+    setJobPost(r1.data);
+  }
+
+  let renderJobDescription = () =>{
+
+    return(
+      <div style={{fontSize:18}}>
+        {parse(jobPosts[postIndex].job_description)}
+      </div>
+    )
+  }
+
+let renderBasicInfo = () => {
+  // return item == "salary" || item == "nature" || item == "type" || item == "qualification" || item == "location";
+  let indents = [];
+  let rindents = [];
+  let index = 0;
+  for (let item in jobPosts[postIndex]) {
+      if (item == "salary" || item == "nature" || item == "type" || item == "qualification" || item == "location") {
+        if ( index < 3) {
+          indents.push(
+            <p style={{fontSize: 18, margin:20}}>
+              {item + " : " + jobPosts[postIndex][item]}
+            </p>
+          )
+        } else {
+          rindents.push(
+            <p style={{fontSize: 18, margin:20}}>
+              {item + " : " + jobPosts[postIndex][item]}
+            </p>
+          )
+        }
+        index++;
+    }
+}
+  return (
+    <div style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
+      <div style={{display:'felx'}}>
+        {
+          indents
+        }
+      </div>
+      <div style={{display:'felx'}}>
+        {
+          rindents
+        }
+      </div>
+    </div>
+  )
+}
+
+let renderJobRequirement = () => {
+  return (
+    <div style={{fontSize: 16}}>
+      {parse(jobPosts[postIndex].job_requirement)}
+    </div>
+  )
+}
+
+  useEffect(() => {
+    handleAllPostsFetch();
+  }, [])
 
   let history = useHistory();
   useEffect(() => {
@@ -152,22 +264,49 @@ export  function SeekerCommunityPage() {
       <div style={{display:'flex', flexDirection:'row', flex:1, flexBasis:880}}>
         <div style={{display:'flex', flexDirection:'column', flex:1}}>
           <div class="list" style={{margin:20, flex:1, display:'flex', flexDirection:'column'}}>
-            <div class="list" style={{flex: 1.5}}>
+            <div class="list" style={{flex: 1, maxHeight:60}}>
               <span style={{position:'relative', top:25, margin:10, color:'grey', fontSize:14}}>Job List</span>
             </div>
-            {renderList()}
+            <div style={{flexDirection:'column', minHeight:500}}>
+              {renderList()}
+            </div>
           </div>
         </div>
         <div style={{display:'flex', flexDirection:'column', flex:2}}>
-          <div style={{display:'flex', flexDirection:'column', flex:1, margin:20, background:'rgba(33, 130, 94, 0.31)', borderRadius:20}}>
+          <div style={{display:'flex', flexDirection:'column',flexBasis: 1000, flex:10, margin:20, background:'rgba(33, 130, 94, 0.31)', borderRadius:20}}>
             <div class="title" style={{ display:'flex', justifyContent:'center', alignItems:'center', flex:1, borderTopLeftRadius:20,borderTopRightRadius:20}}>
-              <span style={{fontSize:35, fontWeight:'bold', fontFamily:'Open Sans'}}>Data Analyst (One Year Contract)</span>
+              <span style={{fontSize:35, fontWeight:'bold', fontFamily:'Open Sans', minWidth:200,minHeight:55, padding:20}}>
+                {
+                    jobPosts.length > 0 ?
+                      jobPosts[postIndex].title
+                        :
+                      null
+                }
+              </span>
             </div>
-            <div class="basicInfo" style={{flex:1}}>
+            <div class="jbDesript" style={{margin:10, marginBottom: 10,display:'flex',justifyContent:'center', alignItems:'center', minWidth:200}}> Basic Info</div>
+            <div class="basicInfo" style={{flex:1, minHeight:150, overflowY:'scroll'}}>
+              {
+                renderBasicInfo()
+              }
             </div>
-            <div class="jbDesript" style={{flex:1,}}>
+            <div class="jbDesript" style={{margin:10, marginBottom: 20,display:'flex',justifyContent:'center', alignItems:'center', minWidth:200}}> Job description</div>
+            <div class="jbDesript" style={{margin:10, flex:5, overflowY:'scroll', flexDirection:"column", minHeight:400}}>
+              {
+                jobPosts.length > 0 ?
+                renderJobDescription()
+                    :
+                  null
+              }
             </div>
-            <div class="requirement" style={{flex:1,}}>
+            <div class="jbDesript" style={{margin:10, marginBottom: 20,display:'flex',justifyContent:'center', alignItems:'center'}}> Job Requirement</div>
+            <div class="requirement" style={{ overflowY:'scroll',flex:4,margin: 10, minHeight:300}}>
+              {
+                jobPosts.length > 0 ?
+                  renderJobRequirement()
+                    :
+                  null
+              }
             </div>
             <div class="applicationMethod" style={{flex:1}}/>
             <div style={{flex:1, borderBottomLeftRadius:20, borderBottomRightRadius:20}}/>
@@ -178,7 +317,14 @@ export  function SeekerCommunityPage() {
               <img src={CirclesIconSVG} style={{position:'relative', top:10, height:'80%', width:'70%'}} alt="RightIconSVG" />
           </div>
           <div style={{display:'flex', flexDirection:'column', flex:1, alignItems:'center',}}>
-            <span style={{fontSize:35, fontWeight:'bold', fontFamily:'Open Sans'}}>Company Name</span>
+            <span style={{fontSize:35, fontWeight:'bold', fontFamily:'Open Sans'}}>
+            {
+              jobPosts.length > 0?
+                jobPosts[postIndex].org_id
+                :
+              null
+            }
+            </span>
             <div style={{display:'flex', height:'50%', flexDirection:'row', width:'50%'}}>
               <div style={{display:'flex', margin:20, paddingBottom:2, height:'50%', width:'50%',backgroundColor:'red',
                     borderRadius:20, background:'rgba(33, 130, 94, 0.5)', justifyContent:'center', alignItems:'center'}}>

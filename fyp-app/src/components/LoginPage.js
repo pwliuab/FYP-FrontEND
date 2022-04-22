@@ -7,7 +7,6 @@ import { Authentication } from './Authentication';
 import { useHistory } from "react-router-dom";
 import { RedirectTo } from './Redirection';
 import { USER_TYPE_COOKIE } from './ConstantVariable';
-
 export  function LoginPage(){
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   let history = useHistory();

@@ -10,15 +10,16 @@ import { USER_TYPE_COOKIE } from './ConstantVariable';
 
 
 
-function Input(){
+function Input() {
   const type = {
-    File: { JD: 'JDFile', RESUME: 'resumeFile' },
-    Content: { JD: 'Job Description Content', RESUME: 'Resume Content' },
-    Value: {JD: 'JobDescription', RESUME: 'Resume'}
+    File: { JD: 'JDFile', RESUME: 'resumeFile', JR:"JRFile"},
+    Content: { JD: 'Job Description Content', RESUME: 'Resume Content', JR:"Job Ruirement Content" },
+    Value: {JD: 'JobDescription', RESUME: 'Resume', JR:"JobRuirement"}
   }
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   const [selectedFiles, setFilesValue] = useState([]);
   const [textContent, setTextContent] = useState([]);
+
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
     document.body.style.overflowX = 'hidden';
@@ -51,12 +52,12 @@ let handleTextInput = (e) => {
     if (textContent.length == 0) {
       setTextContent([{id: e.target.id, content: e.target.value}]);
     } else {
-      let tempContents = textContent.filter((item) => {
-        return item.id != e.target.id;
-      })
+        let tempContents = textContent.filter((item) => {
+          return item.id != e.target.id;
+        })
 
-      tempContents.push({id: e.target.id, content: e.target.value});
-      setTextContent(tempContents);
+        tempContents.push({id: e.target.id, content: e.target.value});
+        setTextContent(tempContents);
     }
 }
 
@@ -65,7 +66,7 @@ let handleTextMode = (e) => {
       return obj.id != e.target.id;
     });
     console.log("this is tempFile" + tempFiles);
-  setFilesValue([...tempFiles]);
+    setFilesValue([...tempFiles]);
 }
 
 let handleSubmit = async (e) => {
@@ -90,15 +91,38 @@ let handleSubmit = async (e) => {
     console.log(resData);
 }
 
-  let renderTextArea = (placeHolder, type) => {
+  let renderTextArea = (placeHolder, types) => {
+      let indents = [];
+      if (types != type.Value.JD) {
+        indents.push(
+           <textarea  style={{flex:1, paddingTop: 10,paddingLeft:10, opacity:1,color:'#000000',
+                            fontSize:'24px',
+                            margin: '20px',
+                            borderRadius: '10px'
+                          }} id={type} onBlur={handleTextInput} placeholder={placeHolder} type="text"/>
+                        )
+      } else {
 
-    return (
-      <textarea  style={{flex:1, paddingTop: 10,paddingLeft:10, opacity:1,color:'#000000',
-              fontSize:'24px',
-              margin: '20px',
-              borderRadius: '10px'
-            }} id={type} onBlur={handleTextInput} placeholder={placeHolder} type="text"/>
-    )
+          indents.push(
+            <textarea  style={{flex:1, paddingTop: 10,paddingLeft:10, opacity:1,color:'#000000',
+                             fontSize:'24px',
+                             margin: '20px',
+                             borderRadius: '10px'
+                           }} id={type} onBlur={handleTextInput} placeholder={placeHolder} type="text"/>
+
+          );
+
+          indents.push(
+            <textarea  style={{flex:1, paddingTop: 10,paddingLeft:10, opacity:1,color:'#000000',
+                             fontSize:'24px',
+                             margin: '20px',
+                             borderRadius: '10px'
+                           }} id={type} onBlur={handleTextInput} placeholder={type.Content.JR} type="text"/>
+          );
+
+      }
+
+      return indents;
   }
 
   let renderFileDisplay = (fileType) => {
@@ -152,9 +176,11 @@ let handleSubmit = async (e) => {
                   </span>
                 </div>
                 <div class='selection'>
+
                   <span style={{fontSize:22}}>
                     Select File from Profile
                   </span>
+
                 </div>
                     {
                       (checkFileDisplay(type.File.RESUME)) ?

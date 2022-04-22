@@ -167,17 +167,12 @@ function renderTable() {
 
   let indents = contentPage.map((item, index) => {
     const contentArray = [
-      {ranking: 'Ranking', name: 'Name', contact: 'Email', overallScore: 'Overall Score',download:''},
-      {ranking: '1', name: 'Liam', contact: '4399.com', overallScore: '95',download:''},
-      {ranking: '2', name: 'Lv Zhi Yuan', contact: '4399.com', overallScore: '10',download:''},
-      {ranking: '3', name: 'Zhang wei wen', contact: '4399.com', overallScore: '9',download:''},
-      {ranking: '4', name: 'Zhang ge', contact: '4399.com', overallScore: '8',download:''},
-      {ranking: '5', name: 'DI ge', contact: '4399.com', overallScore: '7',download:''},
-      {ranking: '6', name: 'DI NUO', contact: '4399.com', overallScore: '6',download:''},
-      {ranking: '7', name: 'Raymond', contact: '4399.com', overallScore: '5',download:''},
-      {ranking: '8', name: 'Singer Raymond', contact: '4399.com', overallScore: '4',download:''},
-      {ranking: '9', name: 'Singer Zhang', contact: '4399.com', overallScore: '3',download:''},
-      {ranking: '10', name: 'LV Zhi Jin', contact: '4399.com', overallScore: '2',download:''},
+      {Aspects: 'Aspects', overallScore: 'Scores',download:''},
+      { Aspects: 'Education', overallScore: '95',download:''},
+      { Aspects: 'Experience', overallScore: '10',download:''},
+      { Aspects: 'Language',  overallScore: '49',download:''},
+      {Aspects: 'Communication Skills',  overallScore: '58',download:''},
+      {Aspects: 'Coding ability',  overallScore: '57',download:''},
     ]
 
     const contentStyles = {
@@ -228,11 +223,11 @@ function renderTable() {
 export  function MatchAnalyPage() {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   const [resultList, setResultList] = React.useState([
-  5,
-  2,
-  5,
-  3.15,
-  5
+  5*0.1,
+  5*0.95,
+  5*0.58,
+  5*0.57,
+  5*0.45
 ]);
 
 let history = useHistory();
@@ -259,9 +254,9 @@ useEffect(() => {
         <div style={{flex:1, display:'flex', flexDirection:'column'}}>
           <div style={{flex:3, display:'flex', flexDirection:'column', overflow:'hidden'}}>
             <span class="FontFam" style={{fontSize:70, position:'relative', left:40, top:40}}>Your Score is:</span>
-            <span class="FontFam" style={{fontSize:90, position:'relative', left:40, top:50}}>88</span>
-            <span class="FontFam" style={{fontSize:40, position:'relative', left:40, top:50}}>Good Job!</span>
-              <img src={GoodSVG} style={{position:'relative', top:-20, left:240, height:87, width:83}} alt="GoodSVG" />
+            <span class="FontFam" style={{fontSize:90, position:'relative', left:40, top:150}}>88</span>
+            <span class="FontFam" style={{fontSize:40, position:'relative', left:40, top:250}}>Good Job!</span>
+              <img src={GoodSVG} style={{position:'relative', top:90, left:240, height:87, width:83}} alt="GoodSVG" />
           </div>
           <div class="candidateEva" style={{flex:4, display:'flex', flexDirection:'column', margin:12}}>
             <div class="tableTitle" style={{height: 40, width: 500}}>
@@ -297,7 +292,7 @@ useEffect(() => {
                   x="100"
                   y="5"
                   rx="10"
-                  width="50"
+                  width="80"
                   height="20"
                   fill="#ffd85b"
                   transform="translate(0,-20)"
@@ -305,11 +300,11 @@ useEffect(() => {
                   <text
                     fill="black"
                     fontSize="12"
-                    x="124"
+                    x="139"
                     y="0"
                     textAnchor="middle"
                   >
-                    體能
+                  Experience
                   </text>
                   <text
                     fill="blue"
@@ -324,18 +319,18 @@ useEffect(() => {
                 <g transform="translate(215,65)">
                   <rect
                     rx="10"
-                    width="50"
+                    width="60"
                     height="20"
                     fill="#ffd85b"
                     transform=""
                     />
                     <text
                       fill="black"
-                      transform="translate(25,15)"
+                      transform="translate(30,15)"
                       fontSize="12"
                       textAnchor="middle"
                     >
-                      腦力
+                      Education
                     </text>
                     <text
                       transform="translate(25,35)"
@@ -349,18 +344,18 @@ useEffect(() => {
                   <g transform="translate(185,220)">
                     <rect
                       rx="10"
-                      width="50"
+                      width="120"
                       height="20"
                       fill="#ffd85b"
                       transform=""
                       />
                       <text
                         fill="black"
-                        transform="translate(25,15)"
+                        transform="translate(60,15)"
                         fontSize="12"
                         textAnchor="middle"
                       >
-                        積極
+                        Communication Skills
                       </text>
                       <text
                         transform="translate(25,35)"
@@ -374,18 +369,18 @@ useEffect(() => {
                     <g transform="translate(10,225)">
                       <rect
                         rx="10"
-                        width="50"
+                        width="80"
                         height="20"
                         fill="#ffd85b"
                         transform=""
                         />
                         <text
                           fill="black"
-                          transform="translate(25,15)"
+                          transform="translate(38,15)"
                           fontSize="12"
                           textAnchor="middle"
                         >
-                          技能
+                          Coding ability
                         </text>
                         <text
                           transform="translate(25,35)"
@@ -399,18 +394,18 @@ useEffect(() => {
                       <g transform="translate(-20,65)">
                         <rect
                           rx="10"
-                          width="50"
+                          width="55"
                           height="20"
                           fill="#ffd85b"
                           transform=""
                           />
                           <text
                             fill="black"
-                            transform="translate(25,15)"
+                            transform="translate(27,15)"
                             fontSize="12"
                             textAnchor="middle"
                           >
-                            團隊
+                            Language
                           </text>
                           <text
                             transform="translate(25,35)"

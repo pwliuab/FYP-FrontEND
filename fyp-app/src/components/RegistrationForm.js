@@ -40,11 +40,11 @@ export default function FormValidation(props) {
         let innerItems = data.target.childNodes[i];
         if (!innerItems.childNodes[0] || !innerItems.childNodes[1]) continue;
         let key = convertLabel2Key(innerItems.childNodes[0].innerHTML);
-        console.log(key);
+        console.log("my key: " + key);
         dt.append(key, innerItems.childNodes[1].value);
         console.log(innerItems.childNodes[1].value);
-        console.log(innerItems.childNodes[0].innerHTML);
       }
+      console.log("===========================================");
 
       dt.append("type", props.match.params.type);
 
@@ -64,9 +64,9 @@ export default function FormValidation(props) {
           }
         }
 
-        localStorage.setItem(USER_EMAIL_COOKIE, email);
-        localStorage.setItem(USER_TYPE_COOKIE, props.match.params.type);
-        history.push(RedirectTo('centerPage', props.match.params.type));
+        // localStorage.setItem(USER_EMAIL_COOKIE, email);
+        // localStorage.setItem(USER_TYPE_COOKIE, props.match.params.type);
+        history.push(RedirectTo('loginPage', props.match.params.type));
 
       } catch (error) {
         alert(error);
@@ -119,11 +119,15 @@ export default function FormValidation(props) {
                       <input
                           placeholder='Email'
                           type="email"
-                          {...register("email",
+
+                          {
+                            ...register("email",
                               {
                                   required: true,
                                   pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                              })}
+                              })
+
+                          }
                       />
                   </Form.Field>
                   {errors.email && <p>Please check the Email</p>}

@@ -5,7 +5,10 @@ import './styles/CommunityPage.css';
 import LeftIconSVG from '../assets/Left.svg';
 import RightIconSVG from '../assets/Right.svg';
 import { USER_ID_COOKIE, USER_EMAIL_COOKIE, USER_TYPE_COOKIE} from './ConstantVariable';
-
+import { fetchData } from './DataProvider';
+import { RedirectTo } from './Redirection';
+import { useHistory } from "react-router-dom";
+import parse from "html-react-parser";
 function renderList() {
   console.log('indents');
   // use array slice to divide pages
@@ -121,6 +124,7 @@ function renderTable() {
 
 export  function CommunityPage() {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
+
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
     document.body.style.overflowX = 'hidden';
