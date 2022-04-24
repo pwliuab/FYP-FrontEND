@@ -33,7 +33,18 @@ const routes = [
     exact: true,
     breadcrumbName: 'LoginPage'
   },
-
+  {
+    path:`${rootPath}/inputPage/:jd_id`,
+    component: InputPage,
+    exact: true,
+    breadcrumbName: 'inputPage'
+  },
+  {
+    path:`${rootPath}/inputPage/apply/:jd_id`,
+    component: InputPage,
+    exact: true,
+    breadcrumbName: 'inputPage'
+  },
   {
     path:`${rootPath}/RegistrationPage/:type`,
     component: RegistrationForm,

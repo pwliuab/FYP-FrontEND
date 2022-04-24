@@ -9,9 +9,8 @@ import { Authentication } from './Authentication';
 import { useHistory } from "react-router-dom";
 import { RedirectTo } from './Redirection';
 import { JBSeekerType, USER_ID_COOKIE, USER_EMAIL_COOKIE } from './ConstantVariable';
-import { fetchData, appendData, JOB_POST } from './DataProvider';
+import { fetchData, appendData, JOB_POST, INFORMATION, SAVING, APPLICATION } from './DataProvider';
 import parse from "html-react-parser";
-
 
 
 
@@ -177,10 +176,13 @@ export  function SeekerCommunityPage() {
 
   let handleAllPostsFetch = async () => {
     let params = 'all'
-    let response = await fetchData(JOB_POST, 'GET', params);
+    let user_id = localStorage.getItem("user_id");
+    // fetchData(INFORMATION, 'GET', 'by_user_id/' + user_id),
+    // fetchData(SAVING, 'get', 'by_user_id/' + user_id),
+    // fetchData(APPLICATION, 'get', 'by_user_id/' + user_id)
     let [r1, r2] = await Promise.all([
-      fetchData(JOB_POST, 'GET', params),
-      fetchData(JOB_POST, 'GET', params)
+      fetchData(JOB_POST, 'GET', 'all'),
+
     ]);
     console.log(r1);
     setJobPost(r1.data);
@@ -190,7 +192,7 @@ export  function SeekerCommunityPage() {
 
     return(
       <div style={{fontSize:18}}>
-        {parse(jobPosts[postIndex].job_description)}
+        {parse(jobPosts[postIndex][0].job_description)}
       </div>
     )
   }
@@ -200,18 +202,20 @@ let renderBasicInfo = () => {
   let indents = [];
   let rindents = [];
   let index = 0;
-  for (let item in jobPosts[postIndex]) {
+if (!jobPosts[postIndex]) return null;
+  for (let item in jobPosts[postIndex][0]) {
+
       if (item == "salary" || item == "nature" || item == "type" || item == "qualification" || item == "location") {
         if ( index < 3) {
           indents.push(
             <p style={{fontSize: 18, margin:20}}>
-              {item + " : " + jobPosts[postIndex][item]}
+              {item + " : " + jobPosts[postIndex][0][item]}
             </p>
           )
         } else {
           rindents.push(
             <p style={{fontSize: 18, margin:20}}>
-              {item + " : " + jobPosts[postIndex][item]}
+              {item + " : " + jobPosts[postIndex][0][item]}
             </p>
           )
         }
@@ -237,7 +241,7 @@ let renderBasicInfo = () => {
 let renderJobRequirement = () => {
   return (
     <div style={{fontSize: 16}}>
-      {parse(jobPosts[postIndex].job_requirement)}
+      {parse(jobPosts[postIndex][0].job_requirement)}
     </div>
   )
 }
@@ -278,7 +282,7 @@ let renderJobRequirement = () => {
               <span style={{fontSize:35, fontWeight:'bold', fontFamily:'Open Sans', minWidth:200,minHeight:55, padding:20}}>
                 {
                     jobPosts.length > 0 ?
-                      jobPosts[postIndex].title
+                      jobPosts[postIndex][0].title
                         :
                       null
                 }
@@ -320,31 +324,53 @@ let renderJobRequirement = () => {
             <span style={{fontSize:35, fontWeight:'bold', fontFamily:'Open Sans'}}>
             {
               jobPosts.length > 0?
-                jobPosts[postIndex].org_id
+                jobPosts[postIndex][0].org_id
                 :
               null
             }
             </span>
             <div style={{display:'flex', height:'50%', flexDirection:'row', width:'50%'}}>
-              <div style={{display:'flex', margin:20, paddingBottom:2, height:'50%', width:'50%',backgroundColor:'red',
-                    borderRadius:20, background:'rgba(33, 130, 94, 0.5)', justifyContent:'center', alignItems:'center'}}>
-                    <span style={{fontSize:15, fontWeight:'bold'}}>Apply</span>
+              <div className="LoginTab" style={{display:'flex', margin:20, paddingBottom:2, height:'50%', width:'50%',backgroundColor:'red',
+                    borderRadius:20, background:'rgba(33, 130, 94, 0.5)', justifyContent:'center', alignItems:'center'}}
+                    onClick={()=> {
+                      history.push(RedirectTo('inputPage', 'job_seeker', '/' + jobPosts[postIndex][0].id));
+
+                    }}
+                    >
+                    <span  style={{color:'black', fontSize:15, fontWeight:'bold', cursor: 'pointer'}}>Apply</span>
               </div>
-              <div style={{display:'flex', margin:20, height:'50%', width:'50%', paddingBottom:2,
-                    backgroundColor:'red', borderRadius:20, background:'rgba(248, 231, 105, 0.6)', justifyContent:'center', alignItems:'center'}}>
-                    <span style={{fontSize:15, fontWeight:'bold'}}>Save</span>
+              <div  onClick={async ()=>{
+                  let handleFetch = async () => {
+                    try {
+                      let params = "all"
+                      let user_id = localStorage.getItem("user_id");
+                      let data = {user_id: user_id, job_description_id: jobPosts[postIndex][0].id, status: "saved"};
+                      data = appendData(data);
+                      let response = await fetchData(SAVING, 'POST', data,'all');
+                      if (response.result_code == 200) alert("You have saved the job post successfully!");
+                        else alert("Job saving fails")
+                    } catch(e) {
+                      console.log(e)
+                      return Promise.reject('You have saved this job already')
+                    }
+
+                    return Promise.resolve("sucessfully");
+                  }
+                  try {
+                    let res = await handleFetch()
+                  } catch (e) {
+                    alert("You have saved this job post already~");
+                  }
+              }} className="SignUpTab" style={{display:'flex', margin:20, height:'50%', width:'50%', paddingBottom:2,
+                 borderRadius:20, backgroundColor:'rgba(248, 231, 105, 0.6)', justifyContent:'center', alignItems:'center'
+               }}>
+                    <span style={{fontSize:15, color: 'black',fontWeight:'bold'}}>Save</span>
               </div>
             </div>
           </div>
           <div style={{display:'flex', flexDirection:'column', flex:3, justifyContent:'start', alignItems:'start', marginLeft:140}}>
             <span style={{fontSize:18,  fontFamily:'Open Sans', marginBottom:10}}>Company information</span>
             <span style={{fontSize:18, fontFamily:'Open Sans', marginBottom:10}}>Website: wwww.4399.com</span>
-            <span style={{fontSize:18, fontFamily:'Open Sans', marginBottom:10}}>Bussiness Nature: Retail</span>
-            <span style={{fontSize:18, fontFamily:'Open Sans', marginBottom:10}}>Found Year: 2016</span>
-            <span style={{fontSize:18, fontFamily:'Open Sans', marginBottom:10}}>Address: Hong Kong Shatin</span>
-            <span style={{fontSize:18, fontFamily:'Open Sans', marginBottom:10}}>Number of employee: 20k</span>
-            <span style={{fontSize:18, fontFamily:'Open Sans', marginBottom:10}}>Number of offices: 22</span>
-            <span style={{fontSize:18, fontFamily:'Open Sans', marginBottom:50}}>Funding round: USD$20m</span>
             <span style={{fontSize:18, fontWeight:'bold', fontFamily:'Open Sans', marginBottom:10}}>24 people have applied for this job</span>
             <span style={{fontSize:18, fontWeight:'bold', fontFamily:'Open Sans', marginBottom:10}}>100 people have saved this job</span>
           </div>

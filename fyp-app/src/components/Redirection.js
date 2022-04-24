@@ -46,8 +46,8 @@ const getURLPath = (path, type) => {
   return getPublicURLPath(path);
 }
 
-const RedirectTo = (path, type) => {
-  let urlPath = getURLPath(path, type);
+const RedirectTo = (path, type, params="") => {
+  let urlPath = getURLPath(path, type) + params;
   console.log('URL:' + urlPath);
   return urlPath;
 

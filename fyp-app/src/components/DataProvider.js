@@ -8,6 +8,10 @@ let VALIDATION_API = 'users/validation/validateAccount/validateAccount';
 let JOB_POST_API  = "job_post/";
 let CV_API = "cv_resume/"
 
+let INFORMATION_API = "Information/";
+let SAVING_API = "saving/";
+let APPLICATION_API = "application/";
+
 
 // name
 let USER = "USER";
@@ -15,7 +19,9 @@ let MATCHING = "MATCHING";
 let JDS = "JDS";
 let JOB_POST = "JOB_POST";
 let CV = "CV";
-
+let SAVING = "SAVING";
+let APPLICATION = "APPLICATION";
+let INFORMATION = "INFORMATION";
 // append URL
 const getURL = (type) => {
   let url = URL;
@@ -40,6 +46,15 @@ const getURL = (type) => {
       break;
     case CV:
       url += CV_API;
+      break;
+    case APPLICATION:
+      url += APPLICATION_API;
+      break;
+    case SAVING:
+      url += SAVING_API;
+      break;
+    case INFORMATION:
+      url += INFORMATION_API;
       break;
   }
 
@@ -78,6 +93,7 @@ const appendData = (dataList) => {
 const fetchData = async (type, action, data, params="") => {
   try {
     var url = getURL(type) + params;
+    console.log(url);
     var method = determineMethod(action, data);
 
     var res = await fetch(url, method);
@@ -90,4 +106,4 @@ const fetchData = async (type, action, data, params="") => {
 
 }
 
-export { fetchData, getURL, appendData, JOB_POST,  MATCHING, CV} 
+export { fetchData, getURL, appendData,  MATCHING, CV, INFORMATION_API, APPLICATION, INFORMATION, SAVING, JOB_POST}

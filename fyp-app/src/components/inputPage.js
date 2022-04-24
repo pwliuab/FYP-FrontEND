@@ -7,10 +7,13 @@ import CircleYellowSVG from '../assets/yellowCircle.svg';
 import fileImage from '../assets/fileImage.png'
 import userimage from './user_icon.png';
 import { USER_TYPE_COOKIE } from './ConstantVariable';
+import { RedirectTo } from './Redirection';
+import { useHistory } from "react-router-dom";
 
 
+function Input(props) {
+  let history = useHistory();
 
-function Input() {
   const type = {
     File: { JD: 'JDFile', RESUME: 'resumeFile', JR:"JRFile"},
     Content: { JD: 'Job Description Content', RESUME: 'Resume Content', JR:"Job Ruirement Content" },
@@ -26,6 +29,12 @@ function Input() {
     console.log(selectedFiles);
     console.log(textContent);
   });
+
+  useEffect(() => {
+    console.log("=====================================");
+    console.log(props.match.params.jd_id);
+    console.log("======================================");
+  }, [])
 
   let checkFileDisplay = (id) => {
     for (let item in selectedFiles) {
@@ -67,6 +76,29 @@ let handleTextMode = (e) => {
     });
     console.log("this is tempFile" + tempFiles);
     setFilesValue([...tempFiles]);
+}
+
+let renderButton = () => {
+  if (props.match.path == '/fyp/inputPage/apply/:jd_id') {
+    return (
+      <div style={{display:'flex', flex:1, justifyContent:'end'}}>
+          <div class='g_button' style={{ height:'6%',
+          width:'25%', margin: 10, padding:22}}>Apply and Match</div>
+        </div>
+    )
+  } else if (props.match.params) {
+    return (
+      <div style={{display:'flex', flex:1, justifyContent:'end'}}>
+          <div class='g_button' style={{ height:'6%',
+          width:'25%', margin: 10, padding:22}}
+          onClick={()=>{
+            history.push(RedirectTo('filterPage', localStorage.getItem(USER_TYPE_COOKIE), ""))
+          }}
+          >Search From List</div>
+        </div>
+    )
+  }
+  return  null;
 }
 
 let handleSubmit = async (e) => {
@@ -226,13 +258,19 @@ let handleSubmit = async (e) => {
           </div>
         </div>
             <div class='select_title' style={{display: 'flex', flexDirection: 'row', flex: 1}}>
-              <div style={{display:'flex', flex:1, justifyContent:'end'}}>
-                <div class='g_button' style={{ height:'6%',
-                width:'25%', margin: 10, padding:22}}>Search From List</div>
-              </div>
+{             localStorage.getItem(USER_TYPE_COOKIE) == "job_seeker" ?
+                renderButton()
+              :
+                <div style={{display:'flex', flex:0.67, justifyContent:'end'}}>
+                </div>
+  }
               <div style={{flex:1, display: 'flex', justifyContent:'start', marginLeft: 10}}>
               <div class='y_button' onClick={handleSubmit} style={{ height:'6%',
-                          width:'25%', margin: 10, padding:22}}>Get Result</div>
+                          width:'25%', margin: 10, padding:22}}
+                          onClick={()=>{
+                            history.push(RedirectTo('singleResultPage', localStorage.getItem(USER_TYPE_COOKIE), ""));
+                          }}
+                          >Get Result</div>
               </div>
             </div>
 

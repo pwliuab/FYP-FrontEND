@@ -202,9 +202,16 @@
 // export default SeekerFilterPage;
 import React, { useState, useEffect } from 'react';
 import Axios from "axios";
-import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, List, message, Avatar } from 'antd';
+import Navbar from './Navbar';
+import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, List, message, Avatar, Input } from 'antd';
 import VirtualList from 'rc-virtual-list';
 import './styles/filter.css';
+import { JOB_CHOICE } from './ConstantVariable'
+import { RedirectTo } from './Redirection';
+import { useHistory } from "react-router-dom";
+import  { fetchData, getURL, appendData,  MATCHING, CV, INFORMATION_API, APPLICATION, INFORMATION, SAVING, JOB_POST} from './DataProvider';
+
+
 
 const { Header, Content, Footer } = Layout;
 const { Option } = Select;
@@ -215,30 +222,95 @@ for (let i = 10; i < 36; i++) {
 }
 
 function handleChange(value) {
-  console.log(`selected ${value}`);
+  console.log(value);
 }
 
 const columns = [
   {
-    title: "Name",
-    dataIndex: "Name",
+    title: "Job title",
+    dataIndex: "title",
     width: 150
   },
   {
-    title: "Email",
-    dataIndex: "Email",
+    title: "Company Name",
+    dataIndex: "org_id",
+    width: 150
+  },
+  {
+    title: "Job Nature",
+    dataIndex: "nature",
+    width: 150
+  },
+  {
+    title: "Working location",
+    dataIndex: "location",
     width: 150
   }
 ];
 
 function SeekerFilterPage() {
+let history =  useHistory();
 
-const [state, setstate] = useState([]);
+let [state, setstate] = useState([]);
 const [loading, setloading] = useState(true);
-
+const [job_description_content, setJD] = useState('');
+const [job_requirement_content, setJR] = useState('');
+const [type, setType] = useState("");
+const [title, setTitle] = useState("");
+const [qualification, setQualification] = useState('');
+const [location, setLocation] = useState('');
+const [salary, setSalary] = useState('');
+const [nature, setNature] = useState('');
+const [conditions, setConditions] = useState({});
+const [JOBLIST, setJobList] = useState([]);
+  let RenderOption = (key) => {
+    let indents  = JOB_CHOICE[key];
+    indents = indents.map((item, index) => {
+      return(
+        <Option value={item}>{item}</Option>
+      )
+    })
+    return indents;
+  }
 useEffect(() => {
-  getData();
+  let handleFetch = async () => {
+      let responseData = await fetchData(JOB_POST, "GET", "", "");
+      console.log(responseData);
+      let dataList = [];
+      console.log(responseData.data)
+      for (let i in responseData.data) {
+        dataList.push(responseData.data[i][0]);
+      }
+      console.log(dataList);
+      setstate(dataList);
+      setJobList([...dataList]);
+      setloading(false);
+
+  }
+  handleFetch();
 }, []);
+
+let searchCondition = (scondition) =>{
+  console.log("==============================================")
+
+  console.log("==============================================")
+  console.log(JOBLIST);
+  setstate([...JOBLIST.filter((item, index) => {
+    console.log("condtion")
+    console.log(scondition);
+    let cons = true;
+    console.log(item.type == scondition['type']);
+    console.log(item.location == scondition['location']);
+
+    for (let key in scondition) {
+      cons  = cons && item[key] == scondition[key];
+    }
+    return cons
+  })]);
+
+  console.log(JOBLIST);
+
+}
 
 const getData = async () => {
 
@@ -262,14 +334,9 @@ const getData = async () => {
 
 return (
   <Layout className="layout">
-    <Header>
-      <div className="logo" />
-      <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-        <Menu.Item disabled = "true">Resume Matching</Menu.Item>
-        <Menu.Item>Match</Menu.Item>
-        <Menu.Item>Community</Menu.Item>
-      </Menu>
-    </Header>
+  <div class="TopContainer" style={{ backgroundColor:'black'}}>
+    <Navbar type={"job_seeker"}/>
+  </div>
     <Content style={{ padding: '0 50px' }}>
       <div className="site-layout-content">
         <div style={{flex:0.2, display:'flex', justifyContent:'center', alignItems:'center'}}>
@@ -286,9 +353,8 @@ return (
         <div style={{flex:1, display:'flex', justifyContent:'center', alignItems:'center'}}>
           <div className="filterPageSearchContent" style={{position:'relative',width:'60%', backgroundColor:'white', borderRadius: 30, display:'flex', justifyContent:'center', alignItems:'center'}}>
 
-              <Select className="input" mode="tags" size={'large'} style={{ width: '100%' }} placeholder="Job Title, Compony" onChange={handleChange}>
-                {children}
-              </Select>
+          <Input size={'large'} placeholder="Job Title" onChange={setTitle}></Input>
+
             <div  style={{width:'100%', position:'absolute', backgroundColor:'green', top:'100%', zIndex: 1}}>
             </div>
           </div>
@@ -299,13 +365,13 @@ return (
             <div className="filterPageSearchContent" style={{position:'relative',width:'60%', backgroundColor:'white', borderRadius: 30, display:'flex', justifyContent:'center', alignItems:'center'}}>
               <div style={{flex:0.8, }}/>
               <div style={{flex:0.4, }}/>
-              <Select defaultValue="Employment Type" size={'large'} style={{ width: '100%' }}  onChange={handleChange}>
-                <Option value="jack">Jack</Option>
-                <Option value="lucy">Lucy</Option>
-                <Option value="disabled" disabled>
-                  Disabled
-                </Option>
-                <Option value="Yiminghe">yiminghe</Option>
+              <Select defaultValue="Employment Type" size={'large'} style={{ width: '100%' }}  onChange={(v) =>{
+                setType(v);
+                conditions['type'] = v;
+                setConditions({...conditions});
+                searchCondition(conditions);
+              }}>
+                  {RenderOption('type')}
               </Select>
               <div  style={{width:'100%', position:'absolute', backgroundColor:'green', top:'100%', zIndex: 1}}>
               </div>
@@ -316,13 +382,13 @@ return (
               <div style={{flex:0.8, }}/>
 
               <div style={{flex:0.4, }}/>
-              <Select defaultValue="Working Location" size={'large'} style={{ width: '100%' }} onChange={handleChange}>
-                <Option value="jack">Jack</Option>
-                <Option value="lucy">Lucy</Option>
-                <Option value="disabled" disabled>
-                  Disabled
-                </Option>
-                <Option value="Yiminghe">yiminghe</Option>
+              <Select defaultValue="Working Location" size={'large'} style={{ width: '100%' }} onChange={ (v) => {
+                setLocation(v);
+                conditions['location'] = v;
+                setConditions({...conditions});
+                searchCondition(conditions);
+               }}>
+              {RenderOption('location')}
               </Select>
             </div>
           </div>
@@ -337,13 +403,11 @@ return (
               <div style={{flex:0.8, }}/>
 
               <div style={{flex:0.4, }}/>
-              <Select className = "select" defaultValue="Job Industries" size={'large'} style={{ width: '100%' }} onChange={handleChange}>
-                <Option value="jack">Jack</Option>
-                <Option value="lucy">Lucy</Option>
-                <Option value="disabled" disabled>
-                  Disabled
-                </Option>
-                <Option value="Yiminghe">yiminghe</Option>
+              <Select className = "select" defaultValue="Job Industries" size={'large'} style={{ width: '100%' }} onChange={(v) => {
+                setNature(v);
+                searchCondition();
+              }}>
+                  {RenderOption('nature')}
               </Select>
             </div>
           </div>
@@ -352,13 +416,13 @@ return (
               <div style={{flex:0.8, }}/>
 
               <div style={{flex:0.4, }}/>
-              <Select defaultValue="Level of Qualification" size={'large'} style={{ width: '100%' }} onChange={handleChange}>
-                <Option value="jack">Jack</Option>
-                <Option value="lucy">Lucy</Option>
-                <Option value="disabled" disabled>
-                  Disabled
-                </Option>
-                <Option value="Yiminghe">yiminghe</Option>
+              <Select defaultValue="Level of Qualification" size={'large'} style={{ width: '100%' }} onChange={(v) => {
+                setQualification(v);
+                searchCondition();
+              }}
+
+              >
+              {RenderOption('qualification')}
               </Select>
             </div>
           </div>
@@ -367,13 +431,11 @@ return (
               <div style={{flex:0.8, }}/>
 
               <div style={{flex:0.4, }}/>
-              <Select defaultValue="Salary" size={'large'} style={{ width: '100%' }} onChange={handleChange}>
-                <Option value="jack">Jack</Option>
-                <Option value="lucy">Lucy</Option>
-                <Option value="disabled" disabled>
-                  Disabled
-                </Option>
-                <Option value="Yiminghe">yiminghe</Option>
+              <Select defaultValue="Salary" size={'large'} style={{ width: '100%' }} onChange={(v) => {
+                setSalary(v);
+                searchCondition();
+              }}>
+                {RenderOption('salary')}
               </Select>
             </div>
           </div>
