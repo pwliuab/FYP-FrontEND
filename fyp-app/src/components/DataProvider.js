@@ -11,7 +11,7 @@ let CV_API = "cv_resume/"
 let INFORMATION_API = "Information/";
 let SAVING_API = "saving/";
 let APPLICATION_API = "application/";
-
+let MODEL_API = "modelMatching/"
 
 // name
 let USER = "USER";
@@ -22,6 +22,9 @@ let CV = "CV";
 let SAVING = "SAVING";
 let APPLICATION = "APPLICATION";
 let INFORMATION = "INFORMATION";
+
+let MODEL = "MODEL"
+
 // append URL
 const getURL = (type) => {
   let url = URL;
@@ -55,6 +58,9 @@ const getURL = (type) => {
       break;
     case INFORMATION:
       url += INFORMATION_API;
+      break;
+    case MODEL:
+      url += MODEL_API
       break;
   }
 
@@ -106,4 +112,4 @@ const fetchData = async (type, action, data, params="") => {
 
 }
 
-export { fetchData, getURL, appendData,  MATCHING, CV, INFORMATION_API, APPLICATION, INFORMATION, SAVING, JOB_POST}
+export { fetchData, getURL, appendData,  MATCHING, CV, INFORMATION_API, APPLICATION, INFORMATION, SAVING, JOB_POST, MODEL}

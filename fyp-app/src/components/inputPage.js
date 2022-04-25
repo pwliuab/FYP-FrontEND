@@ -9,11 +9,20 @@ import userimage from './user_icon.png';
 import { USER_TYPE_COOKIE } from './ConstantVariable';
 import { RedirectTo } from './Redirection';
 import { useHistory } from "react-router-dom";
+import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, Input } from 'antd';
+import { FileUploader } from "react-drag-drop-files";
+import { fetchData, appendData, MODEL} from "./DataProvider";
 
 
-function Input(props) {
+const fileTypes = ["JPG", "PNG", "GIF"];
+
+
+function InputPage(props) {
   let history = useHistory();
-
+  const [file, setFile] = useState(null);
+  const handleChange = (file) => {
+    setFile(selectedFiles[0].file);
+  };
   const type = {
     File: { JD: 'JDFile', RESUME: 'resumeFile', JR:"JRFile"},
     Content: { JD: 'Job Description Content', RESUME: 'Resume Content', JR:"Job Ruirement Content" },
@@ -22,6 +31,19 @@ function Input(props) {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   const [selectedFiles, setFilesValue] = useState([]);
   const [textContent, setTextContent] = useState([]);
+  const [jobFileMode, setJobFileMode] = useState(false);
+  // const [JRText, setJRText] = useState("");
+  // const [JDText, setJDText] = useState("");
+  //
+  // const [CVText, setCVText] = useState("");
+  // const [ResumeMode, setResumeMod] = useState("text");
+  //
+  // const [JRFiles, setJRFiles] = useState([]);
+  // const [JDFiles, setJDFiles] = useState([]);
+  //
+  // const [JobPostMode, setJobPostMode] = useState("text");
+  // const [ResumeMode, setResumeMode] = useState("text");
+
 
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
@@ -54,8 +76,59 @@ function Input(props) {
           })
           tempFiles.push({id: e.target.id, file:e.target.files[0]});
           setFilesValue(tempFiles);
+          setFile(e.target.files[0]);
         }
+
   }
+
+let handleFilesUpload = (id, file) => {
+  if(selectedFiles.length == 0) {
+    setFilesValue([{id: id, file:file}]);
+  } else {
+  let tempFiles = selectedFiles.filter(obj => {
+      return obj.id != id;
+    })
+    tempFiles.push({id: id, file: file});
+    setFilesValue(tempFiles);
+  }
+}
+
+
+
+let renderFileArea = () => {
+    let indents = [];
+
+    indents.push(
+      <div  style={{flex:1, paddingTop: 10,paddingLeft:10, opacity:1,color:'#000000',
+                       fontSize:'24px',
+                       margin: '20px',
+                       borderRadius: '10px',
+                       backgroundColor: 'white'
+                     }}>
+        <FileUploader handleChange={(file) => {
+          handleFilesUpload(type.File.JD, file);
+        }} name="file" types={fileTypes} />
+        {renderFileDisplay(type.File.JD)}
+      </div>
+    );
+
+    indents.push(
+      <div  style={{flex:1, paddingTop: 10,paddingLeft:10, opacity:1,color:'#000000',
+                       fontSize:'24px',
+                       margin: '20px',
+                       borderRadius: '10px',
+                       backgroundColor: 'white'
+                     }}>
+            <FileUploader handleChange={(file) => {
+              handleFilesUpload(type.File.JR, file);
+            }} name="file" types={fileTypes} />
+            {renderFileDisplay(type.File.JR)}
+      </div>
+    );
+  return indents
+}
+
+
 
 let handleTextInput = (e) => {
     if (textContent.length == 0) {
@@ -77,6 +150,15 @@ let handleTextMode = (e) => {
     console.log("this is tempFile" + tempFiles);
     setFilesValue([...tempFiles]);
 }
+
+let handleTextIDMode = (id1, id2) => {
+  let tempFiles = selectedFiles.filter(obj => {
+      return obj.id != id1 && obj.id != id2;
+    });
+    console.log("this is tempFile" + tempFiles);
+    setFilesValue([...tempFiles]);
+}
+
 
 let renderButton = () => {
   if (props.match.path == '/fyp/inputPage/apply/:jd_id') {
@@ -101,26 +183,44 @@ let renderButton = () => {
   return  null;
 }
 
+
 let handleSubmit = async (e) => {
     let data = new FormData();
     for (let i = 0; i < selectedFiles.length; i ++) {
       if (selectedFiles[i].id == type.File.JD) data.append("JD", selectedFiles[i].file);
       else if (selectedFiles[i].id == type.File.RESUME) data.append("CV", selectedFiles[i].file);
+      else if (selectedFiles[i].id == type.File.JR) data.append("JR", selectedFiles[i].file);
     }
     console.log(textContent);
     for (let i = 0; i < textContent.length; i ++) {
       if (textContent[i].id == type.Value.JD) data.append("JDText", textContent[i].content);
-      else if (textContent[i].id == type.Value.RESUME) data.append("CVText", textContent[i].content);
+        else if (textContent[i].id == type.Value.RESUME) data.append("CVText", textContent[i].content);
+          else if (textContent[i].id == type.Value.JR) data.append("JRText", textContent[i].content);
     }
+    for(var pair of data.entries()) {
+      console.log(pair[0]+ ', '+ pair[1]);
+    }
+    // let res = await fetch("http://143.89.130.207:3000/web_api/matching/", {
+    //   method: 'POST',
+    //   body: data,
+    // })
+    // let resData = await res.json();
 
-    let res = await fetch("http://143.89.130.207:3000/web_api/matching/", {
-      method: 'POST',
-      body: data,
-    })
-
-    let resData = await res.json();
-    alert(resData.body);
-    console.log(resData);
+    // let [r1, r2] = await Promise.all([
+    //   fetchData(MODEL, 'GET', "", 'JD'),
+    //   fetchData(MODEL, 'GET', "", 'CV'),
+    // ]);
+    // console.log("=========================================")
+    // console.log(r1);
+    // console.log(r2);
+    // let dt = appendData({jd_output: r1.jd_output, cv_output: r2.cv_output, jd_df: r1.jd_df, cv_df: r2.cv_df});
+    // let r3 = await fetchData(MODEL, 'POST', dt, 'result');
+    // console.log(r3);
+    // console.log("=========================================")
+    // history.push(RedirectTo('singleResultPage', localStorage.getItem(USER_TYPE_COOKIE), ""));
+    // console.log("=========================================")
+    // alert(resData.body);
+    // console.log(resData);
 }
 
   let renderTextArea = (placeHolder, types) => {
@@ -131,7 +231,7 @@ let handleSubmit = async (e) => {
                             fontSize:'24px',
                             margin: '20px',
                             borderRadius: '10px'
-                          }} id={type} onBlur={handleTextInput} placeholder={placeHolder} type="text"/>
+                          }} id={types} onBlur={handleTextInput} placeholder={placeHolder} type="text"/>
                         )
       } else {
 
@@ -140,7 +240,7 @@ let handleSubmit = async (e) => {
                              fontSize:'24px',
                              margin: '20px',
                              borderRadius: '10px'
-                           }} id={type} onBlur={handleTextInput} placeholder={placeHolder} type="text"/>
+                           }} id={type.Value.JD} onBlur={handleTextInput} placeholder={placeHolder} type="text"/>
 
           );
 
@@ -149,7 +249,7 @@ let handleSubmit = async (e) => {
                              fontSize:'24px',
                              margin: '20px',
                              borderRadius: '10px'
-                           }} id={type} onBlur={handleTextInput} placeholder={type.Content.JR} type="text"/>
+                           }} id={type.Value.JR} onBlur={handleTextInput} placeholder={type.Content.JR} type="text"/>
           );
 
       }
@@ -166,11 +266,11 @@ let handleSubmit = async (e) => {
     }
 
     console.log(selectedFileName);
-
+    if (selectedFileName == "") return null;
     return (
       <div  style={{display:'flex', flexDirection:'row',flex:1, paddingTop: 10,paddingLeft:10, opacity:1, backgroundColor:'white',
               margin: '20px',
-              borderRadius: '10px'
+              borderRadius: '10px',
             }} id={"container" + fileType}>
             <img src={fileImage} width= "70px" height="70px"/>
             <div style={{display:'flex', flexDirection:'column', height:'65px', justifyContent:'end'}}>
@@ -198,7 +298,7 @@ let handleSubmit = async (e) => {
                 <div style={{display:'flex', flex:1, margin:20, flexDirection:'column', backgroundColor:'#AAD0C1', borderRadius:'20px'}}>
                 <input type="file" id={type.File.RESUME} name={type.File.RESUME} style={{opacity:0, fontSize:0, position: 'absolute'}} onChange={handleFileUpload}/>
                 <div  id={type.File.RESUME} onClick={handleTextMode} class="selection">
-                  <span id={type.File.RESUME} onClick={handleTextMode}  style={{fontSize:22}}>
+                  <span id={type.File.RESUME} onClick={handleTextMode}  style={{fontSize:22, cursor:'pointer'}}>
                     Text
                   </span>
                 </div>
@@ -214,26 +314,38 @@ let handleSubmit = async (e) => {
                   </span>
 
                 </div>
+
                     {
                       (checkFileDisplay(type.File.RESUME)) ?
 
-                        renderFileDisplay(type.File.RESUME)
-
+                        <div style={{flex:1, paddingTop: 10,paddingLeft:10, opacity:1,color:'#000000',
+                                         fontSize:'24px',
+                                         margin: '20px',
+                                         borderRadius: '10px',
+                                         backgroundColor: 'white'}}>
+                          <FileUploader handleChange={(file) => {
+                            handleFilesUpload(type.File.RESUME, file);
+                          }} name="file" types={fileTypes} />
+                          {
+                            renderFileDisplay(type.File.RESUME)
+                          }
+                        </div>
                           :
 
-                        renderTextArea(type.Content.RESUME, type.Value.RESUME)
+                          renderTextArea(type.Content.RESUME, type.Value.RESUME)
+
                     }
               </div>
             </div>
             <div style={{display:'flex', flexDirection: 'column', flex:1}}>
               <div style={{display:'flex', flex:1, margin:20, flexDirection:'column', backgroundColor:'#AAD0C1', borderRadius:'20px'}}>
               <input type="file" id={type.File.JD} name={type.File.JD} style={{opacity:0, fontSize:0, position: 'absolute'}} onChange={handleFileUpload}/>
-              <div  id={type.File.JD} onClick={handleTextMode} class="selection">
-                <span id={type.File.JD} onClick={handleTextMode} style={{fontSize:22}}>
+              <div  id={type.File.JD} onClick={(e) => {handleTextIDMode(type.File.JD, type.File.JR); setJobFileMode(false);}} class="selection">
+                <span id={type.File.JD} onClick={handleTextMode} style={{fontSize:22, cursor:'pointer'}}>
                   Text
                 </span>
               </div>
-              <div class='selection'  style={{cursor:'pointer'}} onClick={() => document.getElementById(type.File.JD).click()}>
+              <div class='selection'  style={{cursor:'pointer'}} onClick={() => setJobFileMode(true)}>
                 <span style={{fontSize:22}}>
                   Upload File
                 </span>
@@ -245,12 +357,10 @@ let handleSubmit = async (e) => {
               </div>
 
               {
-                (checkFileDisplay(type.File.JD)) ?
+                (jobFileMode) ?
 
-                renderFileDisplay(type.File.JD)
-
+                  renderFileArea()
                   :
-
                 renderTextArea(type.Content.JD, type.Value.JD)
               }
 
@@ -267,9 +377,6 @@ let handleSubmit = async (e) => {
               <div style={{flex:1, display: 'flex', justifyContent:'start', marginLeft: 10}}>
               <div class='y_button' onClick={handleSubmit} style={{ height:'6%',
                           width:'25%', margin: 10, padding:22}}
-                          onClick={()=>{
-                            history.push(RedirectTo('singleResultPage', localStorage.getItem(USER_TYPE_COOKIE), ""));
-                          }}
                           >Get Result</div>
               </div>
             </div>
@@ -278,4 +385,4 @@ let handleSubmit = async (e) => {
   );
 }
 
-export default Input;
+export default InputPage;

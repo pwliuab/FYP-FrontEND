@@ -65,6 +65,12 @@ const routes = [
     breadcrumbName: 'CommunityPage'
   },
   {
+    path:`${rootPath}/SeekerCommunityPage/:conditions`,
+    component: SeekerCommunityPage,
+    exact: true,
+    breadcrumbName: 'CommunityPage'
+  },
+  {
     path:`${rootPath}/JobAnalyResultPage`,
     component: JobAnalyResultPage,
     exact: true,
@@ -107,17 +113,17 @@ const routes = [
     breadcrumbName: 'UploadPage'
   },
   {
-  path:`${rootPath}/communityPage`,
-  component: CommunityPage,
+    path:`${rootPath}/communityPage`,
+    component: CommunityPage,
+    exact: true,
+    breadcrumbName: 'CommunityPage'
+    },
+  {
+  path:`${rootPath}/CompanyPage`,
+  component: CompanyPage,
   exact: true,
   breadcrumbName: 'CommunityPage'
-},
-{
-path:`${rootPath}/CompanyPage`,
-component: CompanyPage,
-exact: true,
-breadcrumbName: 'CommunityPage'
-},
+  },
 ];
 
 export default routes;

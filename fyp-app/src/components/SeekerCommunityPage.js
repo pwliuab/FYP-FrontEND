@@ -79,7 +79,7 @@ function renderTable() {
 }
 
 
-export  function SeekerCommunityPage() {
+export  function SeekerCommunityPage(props) {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   const [jobPosts, setJobPost] = useState([]);
   const [postIndex, setCurrentPostIndex] = useState(0);
@@ -89,6 +89,9 @@ export  function SeekerCommunityPage() {
     document.body.style.backgroundColor = '#E8F3EF';
     document.body.style.overflowX = 'hidden';
   });
+  useEffect(() => {
+    console.log(decodeURI(props.match.params.conditions));
+  }, [])
 
   function renderList() {
     console.log('indents');
@@ -185,8 +188,25 @@ export  function SeekerCommunityPage() {
 
     ]);
     console.log(r1);
-    setJobPost(r1.data);
+    if (props.match.params.conditions) {
+      let conditions =  JSON.parse(decodeURI(props.match.params.conditions));
+      console.log(conditions);
+      setJobPost(r1.data.filter((item, index) => {
+        let cons = true;
+        for (let key in conditions) {
+          if (key == "title" && item[0][key].toLowerCase().includes(conditions[key]) || conditions[key] == "") {
+            cons = cons && true;
+            continue;
+          }
+          cons  = cons && item[0][key] == conditions[key];
+        }
+        return cons
+      }));
+    } else {
+      setJobPost(r1.data);
+    }
   }
+
 
   let renderJobDescription = () =>{
 
@@ -248,6 +268,7 @@ let renderJobRequirement = () => {
 
   useEffect(() => {
     handleAllPostsFetch();
+
   }, [])
 
   let history = useHistory();
@@ -333,7 +354,7 @@ let renderJobRequirement = () => {
               <div className="LoginTab" style={{display:'flex', margin:20, paddingBottom:2, height:'50%', width:'50%',backgroundColor:'red',
                     borderRadius:20, background:'rgba(33, 130, 94, 0.5)', justifyContent:'center', alignItems:'center'}}
                     onClick={()=> {
-                      history.push(RedirectTo('inputPage', 'job_seeker', '/' + jobPosts[postIndex][0].id));
+                      history.push(RedirectTo('inputPage', 'job_seeker', '/apply/' + jobPosts[postIndex][0].id));
 
                     }}
                     >

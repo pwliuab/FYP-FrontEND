@@ -206,7 +206,7 @@ import Navbar from './Navbar';
 import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, List, message, Avatar, Input } from 'antd';
 import VirtualList from 'rc-virtual-list';
 import './styles/filter.css';
-import { JOB_CHOICE } from './ConstantVariable'
+import { JOB_CHOICE, USER_TYPE_COOKIE } from './ConstantVariable'
 import { RedirectTo } from './Redirection';
 import { useHistory } from "react-router-dom";
 import  { fetchData, getURL, appendData,  MATCHING, CV, INFORMATION_API, APPLICATION, INFORMATION, SAVING, JOB_POST} from './DataProvider';
@@ -296,13 +296,13 @@ let searchCondition = (scondition) =>{
   console.log("==============================================")
   console.log(JOBLIST);
   setstate([...JOBLIST.filter((item, index) => {
-    console.log("condtion")
-    console.log(scondition);
     let cons = true;
-    console.log(item.type == scondition['type']);
-    console.log(item.location == scondition['location']);
 
     for (let key in scondition) {
+      if (key == "title" && item[key].toLowerCase().includes(scondition[key]) || scondition[key] == "") {
+        cons = cons && true;
+        continue;
+      }
       cons  = cons && item[key] == scondition[key];
     }
     return cons
@@ -353,7 +353,11 @@ return (
         <div style={{flex:1, display:'flex', justifyContent:'center', alignItems:'center'}}>
           <div className="filterPageSearchContent" style={{position:'relative',width:'60%', backgroundColor:'white', borderRadius: 30, display:'flex', justifyContent:'center', alignItems:'center'}}>
 
-          <Input size={'large'} placeholder="Job Title" onChange={setTitle}></Input>
+          <Input size={'large'} placeholder="Job Title" onChange={(v) => {
+            conditions['title'] = v.target.value.toLowerCase();
+            setConditions({...conditions});
+            searchCondition(conditions);
+          }}></Input>
 
             <div  style={{width:'100%', position:'absolute', backgroundColor:'green', top:'100%', zIndex: 1}}>
             </div>
@@ -405,7 +409,9 @@ return (
               <div style={{flex:0.4, }}/>
               <Select className = "select" defaultValue="Job Industries" size={'large'} style={{ width: '100%' }} onChange={(v) => {
                 setNature(v);
-                searchCondition();
+                conditions['nature'] = v;
+                setConditions({...conditions});
+                searchCondition(conditions);
               }}>
                   {RenderOption('nature')}
               </Select>
@@ -418,7 +424,9 @@ return (
               <div style={{flex:0.4, }}/>
               <Select defaultValue="Level of Qualification" size={'large'} style={{ width: '100%' }} onChange={(v) => {
                 setQualification(v);
-                searchCondition();
+                conditions['qualification'] = v;
+                setConditions({...conditions});
+                searchCondition(conditions);
               }}
 
               >
@@ -433,7 +441,9 @@ return (
               <div style={{flex:0.4, }}/>
               <Select defaultValue="Salary" size={'large'} style={{ width: '100%' }} onChange={(v) => {
                 setSalary(v);
-                searchCondition();
+                conditions['salary'] = v;
+                setConditions({...conditions});
+                searchCondition(conditions);
               }}>
                 {RenderOption('salary')}
               </Select>
@@ -452,6 +462,20 @@ return (
             "Loading"
           ) : (
             <Table
+              onRow={(record, rowIndex) => {
+                console.log(record);
+                return {
+                  onClick: event => {
+                    console.log(record.id)
+                    console.log(localStorage.getItem(USER_TYPE_COOKIE));
+                    history.push(RedirectTo("communityPage", localStorage.getItem(USER_TYPE_COOKIE), '/' + JSON.stringify(conditions)));
+                  }, // click row
+                  onDoubleClick: event => {}, // double click row
+                  onContextMenu: event => {}, // right button click row
+                  onMouseEnter: event => {}, // mouse enter row
+                  onMouseLeave: event => {}, // mouse leave row
+                };
+              }}
               columns={columns}
               dataSource={state}
               pagination={{ pageSize: 50 }}
