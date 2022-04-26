@@ -5,58 +5,101 @@ import './styles/CommunityPage.css';
 import LeftIconSVG from '../assets/Left.svg';
 import RightIconSVG from '../assets/Right.svg';
 import { USER_ID_COOKIE, USER_EMAIL_COOKIE, USER_TYPE_COOKIE} from './ConstantVariable';
-import { fetchData } from './DataProvider';
+import { fetchData, RESULT, JOB_POST,SAVING, APPLICATION } from './DataProvider';
 import { RedirectTo } from './Redirection';
 import { useHistory } from "react-router-dom";
 import parse from "html-react-parser";
-function renderList() {
-  console.log('indents');
-  // use array slice to divide pages
-  // or backend dividing pages
-  // it depends on how we handle stuff
-  let listContent  = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17];
-  let indents = listContent.map((num)=>{
-    let evenStyle = 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1';
-    let bgStyle = (num % 2 == 0) ? evenStyle : 'white';
-    let style = {
-      flex:1,
-      paddingLeft: 10,
-      paddingTop: 10,
-      background: bgStyle,
-      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'
-    }
-    return(
-      <div class="ListItem" style={style}>
-        Job Post {num}
-      </div>
-    );
-  });
-// static
-  let styless = {
-    display:'flex', flexDirection:'row',
-    flex:1.5,
-    paddingLeft: 10,
-    paddingTop: 10,
-    background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1',
-    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-  }
+// function renderList() {
+//   console.log('indents');
+//   // use array slice to divide pages
+//   // or backend dividing pages
+//   // it depends on how we handle stuff
+//   let listContent  = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17];
+//   let indents = listContent.map((num)=>{
+//     let evenStyle = 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1';
+//     let bgStyle = (num % 2 == 0) ? evenStyle : 'white';
+//     let style = {
+//       flex:1,
+//       paddingLeft: 10,
+//       paddingTop: 10,
+//       background: bgStyle,
+//       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'
+//     }
+//     return(
+//       <div class="ListItem" style={style}>
+//         Job Post {num}
+//       </div>
+//     );
+//   });
+// // static
+//   let styless = {
+//     display:'flex', flexDirection:'row',
+//     flex:1.5,
+//     paddingLeft: 10,
+//     paddingTop: 10,
+//     background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1',
+//     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+//   }
+//
+//   indents.push(
+//     <div style={styless}>
+//       <div style={{flex:1}}>
+//
+//       </div>
+//       <div style={{flex:1}}>
+//         <span style={{position:'relative', color:'grey'}}>
+//           1-17 of 100 items
+//         </span>
+//           <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30}} alt="LeftIconSVG" />
+//           <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
+//       </div>
+//     </div>
+//   );
+//   return indents;
+// }
 
-  indents.push(
-    <div style={styless}>
-      <div style={{flex:1}}>
+// function renderList() {
+//   console.log('indents');
+//   // use array slice to divide pages
+//   // or backend dividing pages
+//   // it depends on how we handle stuff
+//   let listContent  = [...jobPosts];
+//   while (listContent.length != 20) {
+//     listContent.push({empty:true});
+//   }
+//   console.log(listContent);
+//
+//   let indents = listContent.map((num, index)=>{
+//     let evenStyle = 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1';
+//     let bgStyle = (index % 2 == 0) ? evenStyle : 'white';
+//     let style = {
+//       flex:1,
+//       paddingLeft: 10,
+//       paddingTop: 10,
+//       background: bgStyle,
+//       boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+//       maxHeight:50,
+//       minHeight:50,
+//       minWidth:200,
+//     }
+//
+//     return(
+//         num['empty'] ==null ?
+//         <div class="ListItem" onClick={()=>{setCurrentPostIndex(index);}} id={index} style={style}>
+//           Job Post {index + 1}
+//         </div>
+//           :
+//           <div class="ListItem" style={style}>
+//           </div>
+//
+//
+//     );
+//   });
 
-      </div>
-      <div style={{flex:1}}>
-        <span style={{position:'relative', color:'grey'}}>
-          1-17 of 100 items
-        </span>
-          <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30}} alt="LeftIconSVG" />
-          <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
-      </div>
-    </div>
-  );
-  return indents;
-}
+
+
+
+
 
 function renderTable() {
   let contentPage = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -124,11 +167,156 @@ function renderTable() {
 
 export  function CommunityPage() {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
-
+  const [jobPosts, setJobPosts] = useState([]);
+  const [tableRow, setTableRow] = useState([]);
+  const [postIndex,setCurrentPostIndex] = useState(0);
+  const [lowerBound, setLowerBound] = useState(0);
+  const [upperBound, setUpperBound] = useState(20);
+  const [saved, setSaving] = useState(0);
+  const [applied, setApplication] = useState(0);
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
     document.body.style.overflowX = 'hidden';
   });
+
+  useEffect(() => {
+    let handleFetch = async () => {
+      let user_id = await localStorage.getItem("user_id");
+      let by_user_id = 'by_user_id/' + user_id;
+
+      let [r1, r2, r3] = await Promise.all([
+        fetchData(JOB_POST, 'GET', "", by_user_id),
+        // fetchData(RESULT, 'GET', "", params),
+      ]);
+      setJobPosts(r1.data);
+
+
+      // setTableRow()
+
+      console.log(r1);
+
+    }
+    handleFetch();
+  }, [])
+
+
+  function renderList() {
+    console.log('indents');
+    // use array slice to divide pages
+    // or backend dividing pages
+    // it depends on how we handle stuff
+    let listContent  = [...jobPosts];
+    console.log(listContent)
+    while (listContent.length != 20) {
+      listContent.push({empty:true});
+    }
+    console.log("==========================")
+
+    console.log("==========================")
+    console.log(listContent);
+    console.log("==========================")
+    console.log("==========================")
+
+    let indents = listContent.map((num, index)=>{
+      let evenStyle = 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1';
+      let bgStyle = (index % 2 == 0) ? evenStyle : 'white';
+      let style = {
+        flex:1,
+        paddingLeft: 10,
+        paddingTop: 10,
+        background: bgStyle,
+        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+        maxHeight:50,
+        minHeight:50,
+        minWidth:200,
+      }
+
+      return(
+          num['empty'] ==null ?
+          <div class="ListItem" onClick={async ()=>{setCurrentPostIndex(index);
+            console.log("============================");
+            console.log(jobPosts[index][0].id);
+            console.log("============================")
+          let params  = 'by_jd_id/' + jobPosts[index][0].id;
+          let [r1, r2] = await Promise.all([
+                    fetchData(SAVING, 'GET', "", params),
+                    fetchData(APPLICATION, 'GET',"", params),
+                  ]);
+                  console.log(r1);
+                  console.log("============================");
+                  console.log("============================");
+                  console.log("============================");
+                  console.log("============================");
+                  console.log("============================");
+
+                  console.log(r2);
+                  console.log("============================");
+                  console.log("============================");
+                  console.log("============================");
+                  console.log("============================");
+
+          }} id={index} style={style}>
+            Job Post {index + 1} : {jobPosts[index][0].title}
+          </div>
+            :
+            <div class="ListItem" style={style}>
+            </div>
+
+
+      );
+    });
+
+
+
+
+        let styless = {
+          display:'flex', flexDirection:'row',
+          flex:1.5,
+          paddingLeft: 10,
+          paddingTop: 10,
+          background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #C2C9D1',
+          boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+          maxHeight:50,
+          minHeight:50,
+          minWidth:200,
+        }
+
+        indents = indents.filter((item, index) => {
+            console.log((index >= lowerBound && index < upperBound));
+           return (index >= lowerBound && index < upperBound);
+        });
+
+        indents.push(
+          <div style={styless}>
+            <div style={{flex:1}}>
+            </div>
+            <div style={{flex:1, maxWidth:300, minWidth:200,}}>
+              <span style={{position:'relative', color:'grey'}}>
+                1-20 of 100 items
+              </span>
+                <img src={LeftIconSVG} onClick={()=>{
+                  if (lowerBound == 0 || upperBound == 20) return;
+                  setLowerBound(lowerBound - 20);
+                  setUpperBound(upperBound - 20);
+                }} style={{position:'relative', top:10, height:30, width:30}} alt="LeftIconSVG" />
+                <img onClick={()=>{
+                  if (upperBound >= jobPosts.length) return;
+                  setLowerBound(lowerBound + 20);
+                  setUpperBound(upperBound + 20);
+                }} src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
+            </div>
+          </div>
+        );
+
+        console.log(indents);
+
+
+    return indents
+  }
+
+
+
+
   ////////////////////////////////////////////////////////////
   // flex is used to divide the page into 4 part
   // every part of the container has its own inner division,
@@ -146,20 +334,22 @@ export  function CommunityPage() {
       <div class="SecondContainer" style={{display: 'flex',flexBasis: 850, flexDirection:'row'}}>
         <div class="list" style={{flex: 1, display:'flex'}}>
           <div class="list" style={{margin:20, flex:1, display:'flex', flexDirection:'column'}}>
-            <div class="list" style={{flex: 1.5}}>
-              <span style={{position:'relative', top:25, margin:10, color:'grey', fontSize:14}}>Job List</span>
-            </div>
+          <div class="list" style={{flex: 1, maxHeight:60}}>
+            <span style={{position:'relative', margin:10, color:'grey', fontSize:14}}>Job List</span>
+          </div>
+            <div style={{flexDirection:'column', minHeight:500,}}>
             {renderList()}
+            </div>
           </div>
         </div>
         <div style={{flex:3, display:'flex', flexDirection:'column'}}>
         <div class="list" style={{display:'flex', flex:1, flexDirection: 'column'}}>
           <div class="jbTitle" style={{flex:1}}>
-            JoB Tile (DATA ANALYST)
+            JoB Tile {jobPosts.length > 0 ? jobPosts[postIndex][0].title : null}
           </div>
           <div class="jbDesript" style={{display:'flex', flexDirection:'column', flex:2,}}>
             <div style={{flex:1}}>
-              <span style={{position:'relative', top:10}}>125 people applied, 500 people saved, 1000 people read</span><br/>
+              <span style={{position:'relative', top:10}}>125 people applied, 500 people saved</span><br/>
 
             </div>
             <div style={{display:'flex', flexDirection:'row',flex:1.8}}>

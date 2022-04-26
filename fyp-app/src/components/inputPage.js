@@ -6,25 +6,27 @@ import CircleGreenSVG from '../assets/circle.svg';
 import CircleYellowSVG from '../assets/yellowCircle.svg';
 import fileImage from '../assets/fileImage.png'
 import userimage from './user_icon.png';
-import { USER_TYPE_COOKIE } from './ConstantVariable';
+import { USER_TYPE_COOKIE, JOB_CHOICE} from './ConstantVariable';
 import { RedirectTo } from './Redirection';
 import { useHistory } from "react-router-dom";
 import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, Input } from 'antd';
 import { FileUploader } from "react-drag-drop-files";
-import { fetchData, appendData, MODEL} from "./DataProvider";
+import { fetchData, appendData, MODEL, APPLICATION, CV, RESULT, JOB_POST} from "./DataProvider";
+let { Option } = Select;
 
-
-const fileTypes = ["JPG", "PNG", "GIF"];
+const fileTypes = ["PDF"];
 
 
 function InputPage(props) {
   let history = useHistory();
   const [file, setFile] = useState(null);
+  const [jd, setJD] = useState("");
+  const [jr, setJR] = useState("");
   const handleChange = (file) => {
     setFile(selectedFiles[0].file);
   };
   const type = {
-    File: { JD: 'JDFile', RESUME: 'resumeFile', JR:"JRFile"},
+    File: { JD: 'JobDescription', RESUME: 'Resume', JR:"JobRuirement"},
     Content: { JD: 'Job Description Content', RESUME: 'Resume Content', JR:"Job Ruirement Content" },
     Value: {JD: 'JobDescription', RESUME: 'Resume', JR:"JobRuirement"}
   }
@@ -32,6 +34,19 @@ function InputPage(props) {
   const [selectedFiles, setFilesValue] = useState([]);
   const [textContent, setTextContent] = useState([]);
   const [jobFileMode, setJobFileMode] = useState(false);
+  const [jbType, setJbType] = useState('hr');
+  const [nature, setNature] = useState('');
+  let RenderOption = (key) => {
+    let indents  = JOB_CHOICE[key];
+    indents = indents.map((item, index) => {
+      return(
+        <Option value={item}>{item}</Option>
+      )
+    })
+    return indents;
+  }
+
+
   // const [JRText, setJRText] = useState("");
   // const [JDText, setJDText] = useState("");
   //
@@ -53,9 +68,23 @@ function InputPage(props) {
   });
 
   useEffect(() => {
-    console.log("=====================================");
     console.log(props.match.params.jd_id);
-    console.log("======================================");
+    let handleFetch = async () => {
+      try {
+        let resData = await fetchData(JOB_POST, 'GET', "", "by_jd_id/" + props.match.params.jd_id);
+        console.log("erewrpwelkr[wekrwerkpweorkweporkwope]")
+        setTextContent([{id :type.Value.JD,  content: resData.data[0][0].job_description}, {id :type.Value.JR,  content:resData.data[0][0].job_requirement}])
+        setNature({value:resData.data[0][0].nature, label:resData.data[0][0].nature});
+        setJbType(resData.data[0][0].nature);
+        setJR(resData.data[0][0].job_requirement);
+        setJD(resData.data[0][0].job_description);
+      } catch(e) {
+        console.log(e);
+      }
+    }
+    if (props.match.params.jd_id) {
+      handleFetch();
+    }
   }, [])
 
   let checkFileDisplay = (id) => {
@@ -78,7 +107,10 @@ function InputPage(props) {
           setFilesValue(tempFiles);
           setFile(e.target.files[0]);
         }
-
+        let tempContents = textContent.filter((item) => {
+          return item.id != e.target.id;
+        });
+        setTextContent(tempContents);
   }
 
 let handleFilesUpload = (id, file) => {
@@ -91,6 +123,12 @@ let handleFilesUpload = (id, file) => {
     tempFiles.push({id: id, file: file});
     setFilesValue(tempFiles);
   }
+
+  let tempContents = textContent.filter((item) => {
+    return item.id != id;
+  });
+
+  setTextContent(tempContents);
 }
 
 
@@ -128,6 +166,18 @@ let renderFileArea = () => {
   return indents
 }
 
+let handleTextIDInput = (id, value) => {
+  if (textContent.length == 0) {
+    setTextContent([{id: id, content: value}]);
+  } else {
+      let tempContents = textContent.filter((item) => {
+        return item.id != id;
+      })
+
+      tempContents.push({id: id, content: value});
+      setTextContent(tempContents);
+  }
+}
 
 
 let handleTextInput = (e) => {
@@ -165,7 +215,21 @@ let renderButton = () => {
     return (
       <div style={{display:'flex', flex:1, justifyContent:'end'}}>
           <div class='g_button' style={{ height:'6%',
-          width:'25%', margin: 10, padding:22}}>Apply and Match</div>
+          width:'25%', margin: 10, padding:22}}
+          onClick={async () => {
+            let data = {};
+
+            data = appendData({user_id: localStorage.getItem('user_id'), job_description_id: props.match.params.jd_id, status: 'waiting'})
+            try {
+              let responseData  = await fetchData(APPLICATION, 'POST', data, 'by_user_id/' + localStorage.getItem('user_id'))
+              handleMatchAndStore();
+              console.log(responseData);
+            } catch(e) {
+              alert("You have applied this job already, click get Result to get corresponding result");
+            }
+
+          }}
+          >Apply and Match</div>
         </div>
     )
   } else if (props.match.params) {
@@ -183,42 +247,165 @@ let renderButton = () => {
   return  null;
 }
 
-
-let handleSubmit = async (e) => {
-    let data = new FormData();
+let handleMatchAndStore = async (e) => {
+    let jddata = new FormData();
+    let cvdata = new FormData();
+    let isJPText = false;
+    let isCVText = false;
+    let data = {};
     for (let i = 0; i < selectedFiles.length; i ++) {
-      if (selectedFiles[i].id == type.File.JD) data.append("JD", selectedFiles[i].file);
-      else if (selectedFiles[i].id == type.File.RESUME) data.append("CV", selectedFiles[i].file);
-      else if (selectedFiles[i].id == type.File.JR) data.append("JR", selectedFiles[i].file);
+      if (selectedFiles[i].id == type.File.JD) jddata.append("JD", selectedFiles[i].file);
+      else if (selectedFiles[i].id == type.File.RESUME) {
+         cvdata.append("CV", selectedFiles[i].file)
+         data['file'] = selectedFiles[i].file;
+       }
+      else if (selectedFiles[i].id == type.File.JR) jddata.append("JR", selectedFiles[i].file);
     }
     console.log(textContent);
+    console.log(selectedFiles);
     for (let i = 0; i < textContent.length; i ++) {
-      if (textContent[i].id == type.Value.JD) data.append("JDText", textContent[i].content);
-        else if (textContent[i].id == type.Value.RESUME) data.append("CVText", textContent[i].content);
-          else if (textContent[i].id == type.Value.JR) data.append("JRText", textContent[i].content);
+      if (textContent[i].id == type.Value.JD) {
+         jddata.append("JD", textContent[i].content);
+         isJPText = true;
+       }
+        else if (textContent[i].id == type.Value.RESUME) {
+          cvdata.append("CV", textContent[i].content);
+          isCVText = true;
+        }
+          else if (textContent[i].id == type.Value.JR) {
+            jddata.append("JR", textContent[i].content);
+            isJPText = true;
+          }
     }
-    for(var pair of data.entries()) {
+
+    jddata.append('type', jbType);
+    cvdata.append('type', 'designer');
+    for(var pair of jddata.entries()) {
+
       console.log(pair[0]+ ', '+ pair[1]);
+
+    }
+    for(var pair of cvdata.entries()) {
+
+      console.log(pair[0]+ ', '+ pair[1]);
+
+    }
+    let jdType = (isJPText)? 'text' : 'file';
+    let cvType = (isCVText)? 'text' : 'file';
+    console.log('cvType:' + cvType);
+    console.log('jdType:' + jdType);
+    // resume databaes format
+    data['user_id'] = localStorage.getItem('user_id');
+    data['info'] = "not applicable";
+    data['education'] = 'not applicable'
+    data['extra_activity'] = 'not applicable';
+    data['additional_info'] = 'not applicable';
+    let resume = appendData(data);
+
+    for(var pair of resume.entries()) {
+
+      console.log(pair[0]+ ', '+ pair[1]);
+
+    }
+
+    try {
+      let [r1, r2, resumeResponse] = await Promise.all([
+        fetchData(MODEL, 'POST', jddata, 'JD/' + jdType),
+        fetchData(MODEL, 'POST', cvdata, 'cvModel/cvModel/' + cvType),
+        fetchData(CV, 'POST', resume, ""),
+      ]);
+
+
+      console.log(r1);
+      console.log(r2);
+      let dt = appendData({jd_output: r1.jd_output, cv_output: r2.cv_output, jd_df: r1.jd_df, cv_df: r2.cv_df});
+      let r3 = await fetchData(MODEL, 'POST', dt, 'result');
+      console.log(r3);
+      // append the data format
+      let aspects = r3.aspects;
+      let result_option = {};
+      let partial_score = JSON.parse(r3.partial_score);
+      for (let i = 0; i < aspects.length; i ++) {
+        result_option[aspects[i]] = partial_score[i];
+      }
+      console.log(result_option);
+      let resultData = appendData({cv_id: resumeResponse.data.id, result_option: JSON.stringify(result_option),job_description_id: props.match.params.jd_id, result_score: parseInt(JSON.parse(r3.overall_score)[0][0])})
+
+      let r4 = await fetchData(RESULT, 'POST', resultData, '');
+
+      history.push(RedirectTo('singleResultPage', localStorage.getItem(USER_TYPE_COOKIE), "/" + r3.overall_score + "/" + r3.partial_score + "/" + r3.aspects));
+      // console.log("=========================================")
+  }
+  catch(e) {
+    console.log(e);
+    alert("server error, please contact the admin")
+  }
+    // alert(resData.body);
+    // console.log(resData);
+}
+
+let handleSubmit = async (e) => {
+    let jddata = new FormData();
+    let cvdata = new FormData();
+    let isJPText = false;
+    let isCVText = false;
+    for (let i = 0; i < selectedFiles.length; i ++) {
+      if (selectedFiles[i].id == type.File.JD) jddata.append("JD", selectedFiles[i].file);
+      else if (selectedFiles[i].id == type.File.RESUME) cvdata.append("CV", selectedFiles[i].file);
+      else if (selectedFiles[i].id == type.File.JR) jddata.append("JR", selectedFiles[i].file);
+    }
+    console.log(textContent);
+    console.log(selectedFiles);
+    for (let i = 0; i < textContent.length; i ++) {
+      if (textContent[i].id == type.Value.JD) {
+         jddata.append("JD", textContent[i].content);
+         isJPText = true;
+       }
+        else if (textContent[i].id == type.Value.RESUME) {
+          cvdata.append("CV", textContent[i].content);
+          isCVText = true;
+        }
+          else if (textContent[i].id == type.Value.JR) {
+            jddata.append("JR", textContent[i].content);
+            isJPText = true;
+          }
+    }
+
+    jddata.append('type', jbType);
+    cvdata.append('type', 'designer');
+    for(var pair of jddata.entries()) {
+
+      console.log(pair[0]+ ', '+ pair[1]);
+
+    }
+    for(var pair of cvdata.entries()) {
+
+      console.log(pair[0]+ ', '+ pair[1]);
+
     }
     // let res = await fetch("http://143.89.130.207:3000/web_api/matching/", {
     //   method: 'POST',
     //   body: data,
     // })
     // let resData = await res.json();
+    let jdType = (isJPText)? 'text' : 'file';
+    let cvType = (isCVText)? 'text' : 'file';
+    console.log('cvType:' + cvType);
+    console.log('jdType:' + jdType);
+      let [r1, r2] = await Promise.all([
+        fetchData(MODEL, 'POST', jddata, 'JD/' + jdType),
+        fetchData(MODEL, 'POST', cvdata, 'cvModel/cvModel/' + cvType),
+      ]);
+      console.log(r1);
+      console.log(r2);
+      let dt = appendData({jd_output: r1.jd_output, cv_output: r2.cv_output, jd_df: r1.jd_df, cv_df: r2.cv_df});
+      let r3 = await fetchData(MODEL, 'POST', dt, 'result');
+      console.log(r3);
+      console.log("=========================================")
+      history.push(RedirectTo('singleResultPage', localStorage.getItem(USER_TYPE_COOKIE), "/" + r3.overall_score + "/" + r3.partial_score + "/" + r3.aspects));
+      console.log("=========================================")
 
-    // let [r1, r2] = await Promise.all([
-    //   fetchData(MODEL, 'GET', "", 'JD'),
-    //   fetchData(MODEL, 'GET', "", 'CV'),
-    // ]);
-    // console.log("=========================================")
-    // console.log(r1);
-    // console.log(r2);
-    // let dt = appendData({jd_output: r1.jd_output, cv_output: r2.cv_output, jd_df: r1.jd_df, cv_df: r2.cv_df});
-    // let r3 = await fetchData(MODEL, 'POST', dt, 'result');
-    // console.log(r3);
-    // console.log("=========================================")
-    // history.push(RedirectTo('singleResultPage', localStorage.getItem(USER_TYPE_COOKIE), ""));
-    // console.log("=========================================")
+
     // alert(resData.body);
     // console.log(resData);
 }
@@ -234,17 +421,31 @@ let handleSubmit = async (e) => {
                           }} id={types} onBlur={handleTextInput} placeholder={placeHolder} type="text"/>
                         )
       } else {
-
           indents.push(
-            <textarea  style={{flex:1, paddingTop: 10,paddingLeft:10, opacity:1,color:'#000000',
+            (props.match.params.jd_id)?
+            <textarea disabled={true} style={{flex:1, paddingTop: 10,paddingLeft:10, opacity:1,color:'#000000',
                              fontSize:'24px',
                              margin: '20px',
                              borderRadius: '10px'
-                           }} id={type.Value.JD} onBlur={handleTextInput} placeholder={placeHolder} type="text"/>
-
+                           }} id={type.Value.JD} value={jd} onBlur={handleTextInput} placeholder={placeHolder} type="text"/>
+                           :
+                           <textarea    style={{flex:1, paddingTop: 10,paddingLeft:10, opacity:1,color:'#000000',
+                                            fontSize:'24px',
+                                            margin: '20px',
+                                            borderRadius: '10px'
+                                          }} id={type.Value.JR} onBlur={handleTextInput} placeholder={type.Content.JR} type="text"/>
           );
-
+          console.log(props.match.params.jd_id);
           indents.push(
+            (props.match.params.jd_id)?
+                <textarea disabled={true}   style={{flex:1, paddingTop: 10,paddingLeft:10, opacity:1,color:'#000000',
+                                         fontSize:'24px',
+                                         margin: '20px',
+                                         borderRadius: '10px'
+                                       }} id={type.Value.JR} value={jr} onBlur={handleTextInput} placeholder={type.Content.JR} type="text"/>
+
+                                        :
+
             <textarea  style={{flex:1, paddingTop: 10,paddingLeft:10, opacity:1,color:'#000000',
                              fontSize:'24px',
                              margin: '20px',
@@ -299,19 +500,17 @@ let handleSubmit = async (e) => {
                 <input type="file" id={type.File.RESUME} name={type.File.RESUME} style={{opacity:0, fontSize:0, position: 'absolute'}} onChange={handleFileUpload}/>
                 <div  id={type.File.RESUME} onClick={handleTextMode} class="selection">
                   <span id={type.File.RESUME} onClick={handleTextMode}  style={{fontSize:22, cursor:'pointer'}}>
-                    Text
+                    Click me to Upload Text
                   </span>
                 </div>
-                <div class='selection'  style={{cursor:'pointer'}} onClick={() => document.getElementById(type.File.RESUME).click()}>
+                <div class='selection'  style={{cursor:'pointer'}} onClick={() => {
+                  document.getElementById(type.File.RESUME).click();
+                }}>
                   <span style={{fontSize:22}}>
-                    Upload File
+                    Click me to Upload File
                   </span>
                 </div>
                 <div class='selection'>
-
-                  <span style={{fontSize:22}}>
-                    Select File from Profile
-                  </span>
 
                 </div>
 
@@ -342,18 +541,23 @@ let handleSubmit = async (e) => {
               <input type="file" id={type.File.JD} name={type.File.JD} style={{opacity:0, fontSize:0, position: 'absolute'}} onChange={handleFileUpload}/>
               <div  id={type.File.JD} onClick={(e) => {handleTextIDMode(type.File.JD, type.File.JR); setJobFileMode(false);}} class="selection">
                 <span id={type.File.JD} onClick={handleTextMode} style={{fontSize:22, cursor:'pointer'}}>
-                  Text
+                  Click me to upload Text
                 </span>
               </div>
-              <div class='selection'  style={{cursor:'pointer'}} onClick={() => setJobFileMode(true)}>
+              <div class='selection'  style={{cursor:'pointer'}} onClick={() => {
+                if (props.match.params.jd_id) return;
+                setJobFileMode(true)
+              }}>
                 <span style={{fontSize:22}}>
-                  Upload File
+                  Click me to Upload File
                 </span>
               </div>
               <div class='selection'>
-                <span style={{fontSize:22}}>
-                  Select File from Profile
-                </span>
+              <Select disabled={ (props.match.params.jd_id)? true : false}defaultValue="Job Industries" size={'large'} style={{ width: '100%', borderRadius:50 }} value={jbType}  onChange={(e) => {
+                setJbType(e);
+              }}>
+                {RenderOption('nature')}
+              </Select>
               </div>
 
               {

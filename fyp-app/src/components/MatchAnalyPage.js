@@ -162,18 +162,21 @@ function renderList() {
   return indents;
 }
 
-function renderTable() {
+function renderTable(aspects, scores) {
   let contentPage = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
   let indents = contentPage.map((item, index) => {
-    const contentArray = [
-      {Aspects: 'Aspects', overallScore: 'Scores',download:''},
-      { Aspects: 'Education', overallScore: '95',download:''},
-      { Aspects: 'Experience', overallScore: '10',download:''},
-      { Aspects: 'Language',  overallScore: '49',download:''},
-      {Aspects: 'Communication Skills',  overallScore: '58',download:''},
-      {Aspects: 'Coding ability',  overallScore: '57',download:''},
-    ]
+    // const contentArray = [
+    //   {Aspects: 'Aspects', overallScore: 'Scores',download:''},
+    //   { Aspects: 'Education', overallScore: '95',download:''},
+    //   { Aspects: 'Experience', overallScore: '10',download:''},
+    //   { Aspects: 'Language',  overallScore: '49',download:''},
+    //   {Aspects: 'Communication Skills',  overallScore: '58',download:''},
+    //   {Aspects: 'Coding ability',  overallScore: '57',download:''},
+    // ]
+    const contentArray = aspects.map((item, index) => {
+        return { Aspects: item, overallScore:scores[index].toString(), download:"" };
+    })
 
     const contentStyles = {
       flex: 1,
@@ -220,7 +223,7 @@ function renderTable() {
 }
 
 
-export  function MatchAnalyPage() {
+export  function MatchAnalyPage(props) {
   const [activeCandidateBtn, handleBtnChange] = useState(true);
   const [resultList, setResultList] = React.useState([
   5*0.1,
@@ -229,7 +232,9 @@ export  function MatchAnalyPage() {
   5*0.57,
   5*0.45
 ]);
-
+const [results, setResults] = useState([]);
+const [aspects, setAspects] = useState([]);
+const [overallScore, setOverallScore] = useState(0);
 let history = useHistory();
 let type = localStorage.getItem(USER_TYPE_COOKIE);
 useEffect(() => {
@@ -238,7 +243,18 @@ useEffect(() => {
     if (Authentication()) history.push(RedirectTo(null, null));
   }
   CheckLogin();
+  console.log(props.match.params.score1)
+  console.log(props.match.params.score2)
+  console.log(props.match.params.keys)
 
+  let resultLists =  JSON.parse(decodeURI(props.match.params.score2)).map((item, index) => {
+    console.log(item);
+    return 5*(item / 100);
+  })
+  setResultList(resultLists);
+  setAspects(props.match.params.keys.split(','));
+  setResults(JSON.parse(decodeURI(props.match.params.score2)));
+  setOverallScore(JSON.parse(decodeURI(props.match.params.score1))[0][0]);
 }, []);
 
   useEffect(() => {
@@ -254,7 +270,7 @@ useEffect(() => {
         <div style={{flex:1, display:'flex', flexDirection:'column'}}>
           <div style={{flex:3, display:'flex', flexDirection:'column', overflow:'hidden'}}>
             <span class="FontFam" style={{fontSize:70, position:'relative', left:40, top:40}}>Your Score is:</span>
-            <span class="FontFam" style={{fontSize:90, position:'relative', left:40, top:150}}>88</span>
+            <span class="FontFam" style={{fontSize:90, position:'relative', left:40, top:150}}>{parseInt(overallScore)}</span>
             <span class="FontFam" style={{fontSize:40, position:'relative', left:40, top:250}}>Good Job!</span>
               <img src={GoodSVG} style={{position:'relative', top:90, left:240, height:87, width:83}} alt="GoodSVG" />
           </div>
@@ -264,21 +280,25 @@ useEffect(() => {
             </div>
             <div style={{display:'flex', margin:10, flex:1, backgroundColor:'white', flexDirection:'column',
                   borderRadius:8, marginTop:10, marginBottom:10}}>
-              {renderTable()}
+              {renderTable(aspects, results)}
             </div>
             <div style={{height: 30, display:'flex', flexDirection:'row'}}>
               <div style={{flex:4}}>
                 <span style={{position:'relative', top: -5, left: 20, color: 'grey'}}>
-                  Rows per page:
-                  <img src={LeftIconSVG} style={{position:'relative', top:13, height:30, width:30, transform:'rotate(270deg)scale(0.85)'}} alt="LeftIconSVG" />
+            {      // Rows per page:
+                  // <img src={LeftIconSVG} style={{position:'relative', top:13, height:30, width:30, transform:'rotate(270deg)scale(0.85)'}} alt="LeftIconSVG" />
+                }
                 </span>
               </div>
               <div style={{flex:1}}>
-                <span style={{position:'relative', top: -5, color: 'grey'}}>
-                  Rows per page:
-                  <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30,}} alt="LeftIconSVG" />
-                  <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
-                </span>
+{
+   // <span style={{position:'relative', top: -5, color: 'grey'}}>
+   //               Rows per page:
+   //                <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30,}} alt="LeftIconSVG" />
+   //                <img src={LeftIconSVG} style={{position:'relative', top:10, height:30, width:30, transform:'scale(-1,1)'}} alt="RightIconSVG" />
+   //              </span>
+              }
+
               </div>
             </div>
           </div>
@@ -299,12 +319,12 @@ useEffect(() => {
                   />
                   <text
                     fill="black"
-                    fontSize="12"
+                    fontSize="9"
                     x="139"
                     y="0"
                     textAnchor="middle"
                   >
-                  Experience
+                  {aspects[0]}
                   </text>
                   <text
                     fill="blue"
@@ -313,7 +333,7 @@ useEffect(() => {
                     y="20"
                     textAnchor="middle"
                   >
-                    {(Number.isInteger(resultList[0])) ? (resultList[0] + ".0") : (resultList[0].toString())}
+                    {(Number.isInteger(resultList[0])) ? (resultList[0] + ".0") : (resultList[0].toFixed(2).toString())}
                   </text>
                 </g>
                 <g transform="translate(215,65)">
@@ -327,10 +347,10 @@ useEffect(() => {
                     <text
                       fill="black"
                       transform="translate(30,15)"
-                      fontSize="12"
+                      fontSize="9"
                       textAnchor="middle"
                     >
-                      Education
+                    {aspects[1]}
                     </text>
                     <text
                       transform="translate(25,35)"
@@ -338,24 +358,24 @@ useEffect(() => {
                       fontSize="12"
                       textAnchor="middle"
                     >
-                      {(Number.isInteger(resultList[1])) ? (resultList[1] + ".0") : (resultList[1].toString())}
+                      {(Number.isInteger(resultList[1])) ? (resultList[1] + ".0") : (resultList[1].toFixed(2).toString())}
                     </text>
                   </g>
                   <g transform="translate(185,220)">
                     <rect
                       rx="10"
-                      width="120"
+                      width="80"
                       height="20"
                       fill="#ffd85b"
                       transform=""
                       />
                       <text
                         fill="black"
-                        transform="translate(60,15)"
-                        fontSize="12"
+                        transform="translate(40,15)"
+                        fontSize="9"
                         textAnchor="middle"
                       >
-                        Communication Skills
+                      {aspects[2]}
                       </text>
                       <text
                         transform="translate(25,35)"
@@ -363,7 +383,7 @@ useEffect(() => {
                         fontSize="12"
                         textAnchor="middle"
                       >
-                        {(Number.isInteger(resultList[2])) ? (resultList[2] + ".0") : (resultList[2].toString())}
+                        {(Number.isInteger(resultList[2])) ? (resultList[2] + ".0") : (resultList[2].toFixed(2).toString())}
                       </text>
                     </g>
                     <g transform="translate(10,225)">
@@ -377,10 +397,10 @@ useEffect(() => {
                         <text
                           fill="black"
                           transform="translate(38,15)"
-                          fontSize="12"
+                          fontSize="9"
                           textAnchor="middle"
                         >
-                          Coding ability
+                        {aspects[3]}
                         </text>
                         <text
                           transform="translate(25,35)"
@@ -388,7 +408,7 @@ useEffect(() => {
                           fontSize="12"
                           textAnchor="middle"
                         >
-                          {(Number.isInteger(resultList[3])) ? (resultList[3] + ".0") : (resultList[3].toString())}
+                          {(Number.isInteger(resultList[3])) ? (resultList[3] + ".0") : (resultList[3].toFixed(2).toString())}
                         </text>
                       </g>
                       <g transform="translate(-20,65)">
@@ -402,10 +422,10 @@ useEffect(() => {
                           <text
                             fill="black"
                             transform="translate(27,15)"
-                            fontSize="12"
+                            fontSize="9"
                             textAnchor="middle"
                           >
-                            Language
+                          {aspects[4]}
                           </text>
                           <text
                             transform="translate(25,35)"
@@ -413,7 +433,7 @@ useEffect(() => {
                             fontSize="12"
                             textAnchor="middle"
                           >
-                            {(Number.isInteger(resultList[4])) ? (resultList[4] + ".0") : (resultList[4].toString())}
+                            {(Number.isInteger(resultList[4])) ? (resultList[4] + ".0") : (resultList[4].toFixed(2).toString())}
                           </text>
                         </g>
               <polygon
@@ -436,7 +456,11 @@ useEffect(() => {
             </svg>
           </div>
           <div style={{flex:1,display:'flex'}}>
-            <div class="Btn" style={{margin:20, position:'relative', top:10, left:300}}>
+            <div class="Btn" style={{margin:20, position:'relative', top:10, left:300}}
+            onClick={()=>{
+              history.push(RedirectTo('inputPage', localStorage.getItem(USER_TYPE_COOKIE), ''));
+            }}
+            >
               Continue
             </div>
           </div>

@@ -77,7 +77,7 @@ const routes = [
     breadcrumbName: 'JobAnalyResultPage'
   },
   {
-    path:`${rootPath}/MatchAnalyPage`,
+    path:`${rootPath}/MatchAnalyPage/:score1/:score2/:keys`,
     component: MatchAnalyPage,
     exact: true,
     breadcrumbName: 'MatchAnalyPage'

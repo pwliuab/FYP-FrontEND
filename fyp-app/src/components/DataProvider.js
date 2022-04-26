@@ -12,7 +12,7 @@ let INFORMATION_API = "Information/";
 let SAVING_API = "saving/";
 let APPLICATION_API = "application/";
 let MODEL_API = "modelMatching/"
-
+let RESULT_API = "result/"
 // name
 let USER = "USER";
 let MATCHING = "MATCHING";
@@ -22,7 +22,7 @@ let CV = "CV";
 let SAVING = "SAVING";
 let APPLICATION = "APPLICATION";
 let INFORMATION = "INFORMATION";
-
+let RESULT = "RESULT";
 let MODEL = "MODEL"
 
 // append URL
@@ -61,6 +61,9 @@ const getURL = (type) => {
       break;
     case MODEL:
       url += MODEL_API
+      break;
+    case RESULT:
+      url += RESULT_API;
       break;
   }
 
@@ -112,4 +115,4 @@ const fetchData = async (type, action, data, params="") => {
 
 }
 
-export { fetchData, getURL, appendData,  MATCHING, CV, INFORMATION_API, APPLICATION, INFORMATION, SAVING, JOB_POST, MODEL}
+export { fetchData, getURL, appendData,  MATCHING, CV, INFORMATION_API, APPLICATION, INFORMATION, SAVING, JOB_POST, MODEL, RESULT}
