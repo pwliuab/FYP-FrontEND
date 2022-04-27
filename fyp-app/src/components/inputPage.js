@@ -12,6 +12,8 @@ import { useHistory } from "react-router-dom";
 import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, Input } from 'antd';
 import { FileUploader } from "react-drag-drop-files";
 import { fetchData, appendData, MODEL, APPLICATION, CV, RESULT, JOB_POST} from "./DataProvider";
+import ReactLoading from 'react-loading';
+
 let { Option } = Select;
 
 const fileTypes = ["PDF"];
@@ -36,6 +38,7 @@ function InputPage(props) {
   const [jobFileMode, setJobFileMode] = useState(false);
   const [jbType, setJbType] = useState('hr');
   const [nature, setNature] = useState('');
+  const [loading, setLoading] = useState(false);
   let RenderOption = (key) => {
     let indents  = JOB_CHOICE[key];
     indents = indents.map((item, index) => {
@@ -319,6 +322,7 @@ let handleMatchAndStore = async (e) => {
       console.log(r1);
       console.log(r2);
       let dt = appendData({jd_output: r1.jd_output, cv_output: r2.cv_output, jd_df: r1.jd_df, cv_df: r2.cv_df});
+      setLoading(true);
       let r3 = await fetchData(MODEL, 'POST', dt, 'result');
       console.log(r3);
       // append the data format
@@ -330,8 +334,8 @@ let handleMatchAndStore = async (e) => {
       }
       console.log(result_option);
       let resultData = appendData({cv_id: resumeResponse.data.id, result_option: JSON.stringify(result_option),job_description_id: props.match.params.jd_id, result_score: parseInt(JSON.parse(r3.overall_score)[0][0])})
-
       let r4 = await fetchData(RESULT, 'POST', resultData, '');
+      setLoading(false);
 
       history.push(RedirectTo('singleResultPage', localStorage.getItem(USER_TYPE_COOKIE), "/" + r3.overall_score + "/" + r3.partial_score + "/" + r3.aspects));
       // console.log("=========================================")
@@ -388,23 +392,33 @@ let handleSubmit = async (e) => {
     //   body: data,
     // })
     // let resData = await res.json();
-    let jdType = (isJPText)? 'text' : 'file';
-    let cvType = (isCVText)? 'text' : 'file';
-    console.log('cvType:' + cvType);
-    console.log('jdType:' + jdType);
-      let [r1, r2] = await Promise.all([
-        fetchData(MODEL, 'POST', jddata, 'JD/' + jdType),
-        fetchData(MODEL, 'POST', cvdata, 'cvModel/cvModel/' + cvType),
-      ]);
-      console.log(r1);
-      console.log(r2);
-      let dt = appendData({jd_output: r1.jd_output, cv_output: r2.cv_output, jd_df: r1.jd_df, cv_df: r2.cv_df});
-      let r3 = await fetchData(MODEL, 'POST', dt, 'result');
-      console.log(r3);
-      console.log("=========================================")
-      history.push(RedirectTo('singleResultPage', localStorage.getItem(USER_TYPE_COOKIE), "/" + r3.overall_score + "/" + r3.partial_score + "/" + r3.aspects));
-      console.log("=========================================")
+    try {
 
+      let jdType = (isJPText)? 'text' : 'file';
+      let cvType = (isCVText)? 'text' : 'file';
+      console.log('cvType:' + cvType);
+      console.log('jdType:' + jdType);
+        setLoading(true);
+        let [r1, r2] = await Promise.all([
+          fetchData(MODEL, 'POST', jddata, 'JD/' + jdType),
+          fetchData(MODEL, 'POST', cvdata, 'cvModel/cvModel/' + cvType),
+        ]);
+        console.log(r1);
+        console.log(r2);
+        let dt = appendData({jd_output: r1.jd_output, cv_output: r2.cv_output, jd_df: r1.jd_df, cv_df: r2.cv_df});
+        let r3 = await fetchData(MODEL, 'POST', dt, 'result');
+        console.log(r3);
+        console.log("=========================================")
+        setLoading(false);
+        history.push(RedirectTo('singleResultPage', localStorage.getItem(USER_TYPE_COOKIE), "/" + r3.overall_score + "/" + r3.partial_score + "/" + r3.aspects));
+        console.log("=========================================")
+
+
+    } catch (e) {
+      alert('system error, please check whether you fill in all the information')
+      setLoading(false);
+
+    }
 
     // alert(resData.body);
     // console.log(resData);
@@ -433,7 +447,7 @@ let handleSubmit = async (e) => {
                                             fontSize:'24px',
                                             margin: '20px',
                                             borderRadius: '10px'
-                                          }} id={type.Value.JR} onBlur={handleTextInput} placeholder={type.Content.JR} type="text"/>
+                                          }} id={type.Value.JD} onBlur={handleTextInput} placeholder={type.Content.JD} type="text"/>
           );
           console.log(props.match.params.jd_id);
           indents.push(
@@ -486,6 +500,17 @@ let handleSubmit = async (e) => {
       <div style={{ backgroundColor:'black' }}>
         <Navbar type={localStorage.getItem(USER_TYPE_COOKIE)}/>
       </div>
+      {
+        (loading)?
+        <div stlye={{position:'relative', display:'flex', justifyContent:'center', alignItems:'center'}}>
+          <div style={{position:'absolute', left:750, zIndex:1}}>
+            <ReactLoading  type={"spinningBubbles"} color="green" height={667} width={375} />
+          </div>
+        </div>
+        :
+        null
+      }
+
       <div style={{ display:'flex', flexBasis: 190 }}>
         <div style={{flex:2}}>
           <h1 align='center' style={{ fontSize:48, position:'relative', left:0, top:40 }} >Job-CV Matching</h1>

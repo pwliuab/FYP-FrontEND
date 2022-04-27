@@ -8,10 +8,12 @@ import userimage from './user_icon.png';
 import ReactDOM from 'react-dom';
 import { Line } from '@ant-design/plots';
 import { USER_ID_COOKIE, USER_EMAIL_COOKIE, USER_TYPE_COOKIE} from './ConstantVariable';
-import {fetchData,  MATCHING, CV, INFORMATION_API, APPLICATION, INFORMATION, SAVING, JOB_POST} from './DataProvider'
+import {fetchData, appendData,  MATCHING, CV, INFORMATION_API, APPLICATION, INFORMATION, SAVING, JOB_POST} from './DataProvider'
 import Cookies from 'js-cookie';
 import { RedirectTo } from './Redirection';
 import { useHistory } from "react-router-dom";
+import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, Input } from 'antd';
+
 const DemoLine = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -45,9 +47,10 @@ function Company() {
 
   const [userType, setUserType] = useState("");
   const [jobDescription, setJD] = useState([]);
-  const [information, setInfo] = useState({});
+  const [information, setInfo] = useState([]);
   const [savings, setSaving] = useState(0);
   const [applications, setApplications] = useState(0);
+  const [editInfo, setInfoEdit] = useState(false);
   let history = useHistory();
 
   let RenderApplicationsList = () => {
@@ -99,6 +102,23 @@ function Company() {
   }, []);
 
   const [activeCandidateBtn, handleBtnChange] = useState(true);
+  const [values, setValues] = useState({});
+
+  let handleEditing = async  (e) =>{
+    console.log(e.target.id);
+    values[e.target.id] = e.target.value;
+    setValues(values)
+    if (values['location'] && values['nature']) {
+      try {
+        let data = appendData({user_id: localStorage.getItem('user_id'), org_id: localStorage.getItem('org_id'), nature: values['nature'], location: values['location']})
+        let responseData = await fetchData(INFORMATION, "POST", data, "all");
+        console.log(responseData);
+        setInfoEdit(false);
+      } catch (e) {
+          console.log(e);
+      }
+    }
+  }
 
   useEffect(() => {
     document.body.style.backgroundColor = '#E8F3EF';
@@ -121,6 +141,7 @@ function Company() {
       } catch(e) {
         console.log(e);
       }
+      console.log(r2);
       // setParamsSaving(r3.index);
       // setSaving(r3.data);
       // setInformation(r1.data);
@@ -128,17 +149,19 @@ function Company() {
       // setApplications(r2.data);
       // setParamsApplication(r2.index);
       if (r2 == "" || r2.result_code == 500) {
-        r2 = {};
+        r2 = [];
       } else {
         setInfo(r2.data);
       }
-
+      console.log(r2.data);
+      console.log(r2.data);console.log(r2.data);console.log(r2.data);console.log(r2.data);
       console.log(r1);
       console.log(r2);
       console.log(r3);
       setJD(r1.data);
       setApplications(r3.data[0]);
       setSaving(r4.data[0]);
+
     }
 
     handleFetch();
@@ -150,15 +173,32 @@ function Company() {
         <Navbar type={localStorage.getItem(USER_TYPE_COOKIE)}/>
       </div>
       <div style={{ display:'flex', flexBasis: 200 }}>
-        <div align='left' style={{ marginLeft:200,marginTop:30, display:'flex',flex:4, flexDirection:'row' }}>
+        <div onClick={(e) =>{
+          if (e.detail == 2) {
+            setInfoEdit(true);
+          }
+          console.log(information);
+        }} align='left' style={{ marginLeft:200,marginTop:30, display:'flex',flex:4, flexDirection:'row' }}>
+{          (editInfo)?
           <div>
             <h1>CV MATCHING COMPANY NAME</h1>
             <p style={{ fontSize:25, fontFamily:'Open Sans' }}>
-              Business Nature: {information.Nature}<br/>
-              Working Location: {information.location}<br/>
+              Business Nature: {	<Input size={'large'} id={"Nature"} onBlur={handleEditing} placeholder={"Business Nature"}></Input>}<br/>
+              Working Location: { <Input size={'large'} id={"location"} onBlur={handleEditing} placeholder={"Working Location"}></Input>}<br/>
               {jobDescription.length} job Posts | {savings} saved | {applications} Applied
             </p>
           </div>
+            :
+          <div>
+            <h1>CV MATCHING COMPANY NAME</h1>
+            <p style={{ fontSize:25, fontFamily:'Open Sans' }}>
+              Business Nature: {information.length == 0? null: information[0].Nature}<br/>
+              Working Location: {information.length == 0? null : information[0].location}<br/>
+              {jobDescription.length} job Posts | {savings} saved | {applications} Applied
+            </p>
+          </div>
+
+        }
         </div>
         <div style={{display:'flex', flex:1}}>
           <div style={{display:'flex',flex:1, margin:20, backgroundColor:'white', borderRadius:20}}>

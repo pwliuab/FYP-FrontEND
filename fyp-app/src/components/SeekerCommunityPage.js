@@ -390,10 +390,11 @@ let renderJobRequirement = () => {
             </div>
           </div>
           <div style={{display:'flex', flexDirection:'column', flex:3, justifyContent:'start', alignItems:'start', marginLeft:140}}>
-            <span style={{fontSize:18,  fontFamily:'Open Sans', marginBottom:10}}>Company information</span>
-            <span style={{fontSize:18, fontFamily:'Open Sans', marginBottom:10}}>Website: wwww.4399.com</span>
-            <span style={{fontSize:18, fontWeight:'bold', fontFamily:'Open Sans', marginBottom:10}}>24 people have applied for this job</span>
-            <span style={{fontSize:18, fontWeight:'bold', fontFamily:'Open Sans', marginBottom:10}}>100 people have saved this job</span>
+{            // <span style={{fontSize:18,  fontFamily:'Open Sans', marginBottom:10}}>Company information</span>
+            // <span style={{fontSize:18, fontFamily:'Open Sans', marginBottom:10}}>Website: wwww.4399.com</span>
+            // <span style={{fontSize:18, fontWeight:'bold', fontFamily:'Open Sans', marginBottom:10}}>24 people have applied for this job</span>
+            // <span style={{fontSize:18, fontWeight:'bold', fontFamily:'Open Sans', marginBottom:10}}>100 people have saved this job</span>
+          }
           </div>
         </div>
       </div>
