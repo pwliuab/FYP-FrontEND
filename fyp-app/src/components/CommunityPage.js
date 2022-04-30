@@ -11,7 +11,7 @@ import { useHistory } from "react-router-dom";
 import { create, all } from 'mathjs';
 import { Button, Radio} from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
-
+import { Authentication } from './Authentication';
 import parse from "html-react-parser";
 const math = create(all,  {})
 
@@ -291,7 +291,7 @@ export  function CommunityPage() {
 
   let calculateLowest = (candidates) => {
     console.log(candidates);
-    let lowest = 5000;
+    let lowest = (candidates.length != 0)? candidates[0] : 0;
     for (let i = 0; i < candidates.length; i ++) {
       if (i == 0) {
         lowest = candidates[i][0];
@@ -324,6 +324,8 @@ export  function CommunityPage() {
   });
 
   useEffect(() => {
+
+    if (Authentication()) history.push(RedirectTo(null, null));
     let handleFetch = async () => {
       let user_id = await localStorage.getItem("user_id");
       let by_user_id = 'by_user_id/' + user_id;

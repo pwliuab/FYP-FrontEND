@@ -51,6 +51,17 @@ function Login(props){
             let response = await fetchData( "USER", 'POST', data, "validation/email/password");
             if (response['result_code'] == '200') {
               let type = (activeCandidateBtn)? 'job_seeker' : 'recruiter';
+              if (activeCandidateBtn) {
+                if (response['user_type'] == 'recruiter') {
+                  alert('you need to switch to recruiter loginForm')
+                  return;
+                }
+              } else {
+                if (response['user_type'] == 'job_seeker') {
+                  alert('you need to switch to job seeker loginForm')
+                  return;
+                }
+              }
               localStorage.setItem(USER_TYPE_COOKIE, response['user_type']);
               localStorage.setItem(USER_ID_COOKIE, response['user_id']);
               localStorage.setItem(USER_EMAIL_COOKIE, response['user_email']);
@@ -58,9 +69,12 @@ function Login(props){
               history.push(RedirectTo('centerPage', type));
               console.log(response);
 
+          } else {
+              alert('you have to sign up your account/ validate it')
           }
         } catch (e) {
           console.log(e);
+          alert('system error');
         }
 
       	setError(false);
@@ -166,7 +180,6 @@ function Login(props){
             fontWeight:'300', top :-20,height:'2.555%',
             fontFamily:'Mulish'
            }} >
-          Forget Password?
       </div>
     </div>
   );

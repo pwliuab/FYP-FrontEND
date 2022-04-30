@@ -12,8 +12,9 @@ import {fetchData, appendData,  MATCHING, CV, INFORMATION_API, APPLICATION, INFO
 import Cookies from 'js-cookie';
 import { RedirectTo } from './Redirection';
 import { useHistory } from "react-router-dom";
-import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, Input } from 'antd';
+import { Authentication } from './Authentication';
 
+import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, Input } from 'antd';
 const DemoLine = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -90,7 +91,7 @@ function Company() {
     console.log("=============================")
 
     console.log("=============================")
-
+    if (Authentication()) history.push(RedirectTo(null, null));
     setUserType(localStorage.getItem(USER_TYPE_COOKIE));
     console.log("=============================")
     console.log("=============================")
@@ -221,10 +222,16 @@ function Company() {
       </div>
       <div class="BottomContainer" style={{ display:'flex', flexBasis: 325 }}>
         <div style={{ display:'flex', flexDirection:'row'}}>
-          <div class='g_button' style={{ height:'80%', position:'relative', left:150, top:100,minHeight:50,
+          <div class='g_button' onClick={() => {
+            history.push(RedirectTo('uploadPage', localStorage.getItem(USER_TYPE_COOKIE),""));
+          }}  style={{ height:'80%', position:'relative', left:150, top:100,minHeight:50,
                         width:'12%', margin: 10, padding:2}}>Upload Job Posts</div>
           <div class='g_button' style={{ height:'80%', position:'relative', left:300, top:100,minHeight:50,
-                        width:'12%', margin: 10, padding:2}}>Applications</div>
+                        width:'12%', margin: 10, padding:2}}
+              onClick={()=> {
+                history.push(RedirectTo('communityPage', localStorage.getItem(USER_TYPE_COOKIE),""));
+              }}
+                        >Applications</div>
           <div class='y_button' style={{ height:'80%', position:'relative', left:450, top:100,minHeight:50,
                         width:'12%', margin: 10, padding:2}}>Save</div>
           <div class='y_button' onClick={()=> {

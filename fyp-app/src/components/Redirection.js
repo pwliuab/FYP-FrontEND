@@ -13,7 +13,7 @@ const PUBLIC_URL = {
   multipleResultPage: `${rootPath}/JobAnalyResultPage`,
   singleResultPage: `${rootPath}/MatchAnalyPage`,
   inputPage: `${rootPath}/inputPage`,
-
+  uploadPage: `${rootPath}/uploadPage`,
 }
 // const parameterList = {
 //   RegistrationPage: { type: null },

@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 import { RedirectTo } from './Redirection';
 import { USER_TYPE_COOKIE } from './ConstantVariable';
 
+
 const renderHistoGram = () => {
   let xCoordinate = 10;
   let transformStr = [1,2,3,4,5,6,7,8,9,10];

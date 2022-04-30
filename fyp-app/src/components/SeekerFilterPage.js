@@ -210,6 +210,7 @@ import { JOB_CHOICE, USER_TYPE_COOKIE } from './ConstantVariable'
 import { RedirectTo } from './Redirection';
 import { useHistory } from "react-router-dom";
 import  { fetchData, getURL, appendData,  MATCHING, CV, INFORMATION_API, APPLICATION, INFORMATION, SAVING, JOB_POST} from './DataProvider';
+import { Authentication } from './Authentication';
 
 
 
@@ -273,6 +274,8 @@ const [JOBLIST, setJobList] = useState([]);
     return indents;
   }
 useEffect(() => {
+  if (Authentication()) history.push(RedirectTo(null, null));
+
   let handleFetch = async () => {
       let responseData = await fetchData(JOB_POST, "GET", "", "");
       console.log(responseData);

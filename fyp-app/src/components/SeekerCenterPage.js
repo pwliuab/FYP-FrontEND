@@ -36,15 +36,20 @@ export  function SeekerCenterPage() {
   let handleFetch = async () => {
     let user_id = await localStorage.getItem("user_id");
     let params = 'by_user_id/' + user_id;
+    try {
+      var r1 = await fetchData(INFORMATION, 'GET', "", params);
 
-    let [r1, r2, r3] = await Promise.all([
-      fetchData(INFORMATION, 'GET', "", params),
+    } catch (e) {
+      console.log(e);
+      r1 = {data: []};
+    }
+    let [r2, r3] = await Promise.all([
       fetchData(APPLICATION, 'GET', "", params),
       fetchData(SAVING, 'GET', "", params)
     ]);
     setParamsSaving(r3.index);
     setSaving(r3.data);
-    setInformation(r1.data);
+    // setInformation(r1.data);
 
     setApplications(r2.data);
     setParamsApplication(r2.index);
@@ -225,7 +230,7 @@ export  function SeekerCenterPage() {
             <div style={{flex:4}}>
               <h1>{localStorage.getItem("user_name")}</h1>
               <p style={{ fontSize:25, fontFamily:'Open Sans' }}>School: {localStorage.getItem("org_id")}<br/>
-                Major: {information.length == 0? null : information[0].Nature}<br/>
+                <br/>
                 Year: 2018 - 2022
               </p>
             </div>

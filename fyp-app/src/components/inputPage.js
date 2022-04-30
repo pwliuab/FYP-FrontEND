@@ -13,6 +13,7 @@ import { Layout, Menu, Breadcrumb, Select, Table, Tag, Space, Input } from 'antd
 import { FileUploader } from "react-drag-drop-files";
 import { fetchData, appendData, MODEL, APPLICATION, CV, RESULT, JOB_POST} from "./DataProvider";
 import ReactLoading from 'react-loading';
+import { Authentication } from './Authentication';
 
 let { Option } = Select;
 
@@ -71,6 +72,8 @@ function InputPage(props) {
   });
 
   useEffect(() => {
+    if (Authentication()) history.push(RedirectTo(null, null));
+
     console.log(props.match.params.jd_id);
     let handleFetch = async () => {
       try {
@@ -224,10 +227,12 @@ let renderButton = () => {
 
             data = appendData({user_id: localStorage.getItem('user_id'), job_description_id: props.match.params.jd_id, status: 'waiting'})
             try {
+              setLoading(true);
               let responseData  = await fetchData(APPLICATION, 'POST', data, 'by_user_id/' + localStorage.getItem('user_id'))
               handleMatchAndStore();
               console.log(responseData);
             } catch(e) {
+              setLoading(false);
               alert("You have applied this job already, click get Result to get corresponding result");
             }
 
@@ -342,6 +347,7 @@ let handleMatchAndStore = async (e) => {
   }
   catch(e) {
     console.log(e);
+    setLoading(false);
     alert("server error, please contact the admin")
   }
     // alert(resData.body);
@@ -415,6 +421,8 @@ let handleSubmit = async (e) => {
 
 
     } catch (e) {
+      console.log(e);
+      alert(e);
       alert('system error, please check whether you fill in all the information')
       setLoading(false);
 

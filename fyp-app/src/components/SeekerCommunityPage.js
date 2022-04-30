@@ -121,7 +121,7 @@ export  function SeekerCommunityPage(props) {
       return(
           num['empty'] ==null ?
           <div class="ListItem" onClick={()=>{setCurrentPostIndex(index);}} id={index} style={style}>
-            Job Post {index + 1}
+            Job Post {index + 1} : {jobPosts[index][0].title}
           </div>
             :
             <div class="ListItem" style={style}>
